@@ -21,7 +21,7 @@ app = Flask(__name__)
 #csrf = CSRFProtect(app)
 REMEMBER_COOKIE_DURATION = timedelta(days=0)
 app.config['SECRET_KEY'] = '5511467d654732b6d9875da2691f78fd'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///use.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)  # Initialize Bcrypt
 # flask_login stuff
@@ -133,6 +133,10 @@ def log_out():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/', methods = ['POST' , 'GET'])
+@login_required
+def home():
+    return render_template('home.html')
 
 with app.app_context():
         db.create_all()
