@@ -23,6 +23,7 @@ REMEMBER_COOKIE_DURATION = timedelta(days=0)
 app.config['SECRET_KEY'] = '5511467d654732b6d9875da2691f78fd'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///use.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)  # Initialize Bcrypt
 # flask_login stuff
 login_manager = LoginManager()
