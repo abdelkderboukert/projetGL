@@ -40,7 +40,7 @@ class userForm(FlaskForm):
     email = StringField("email", validators=[DataRequired()])
     password_hash = PasswordField("password", validators=[DataRequired(), equal_to('password_hash2', message='password must match!')])
     password_hash2 = PasswordField("password", validators=[DataRequired()]) 
-    dro = SelectField(u'Choose a programming language', choices=[
+    bro = SelectField(u'Choose a programming language', choices=[
         (0, 'patient'),
         (1, 'doctor'),
     ], render_kw={"placeholder": "login as"}, validators=[DataRequired()])
@@ -114,7 +114,7 @@ def add_user():
           if user is None:
               #hash password!!
               hashed_pw = generate_password_hash(form.password_hash.data)
-              user = User(name=form.name.data, email=form.email.data, password_hash=hashed_pw)
+              user = User(name=form.name.data, email=form.email.data, password_hash=hashed_pw, bro=form.bro.data)
               db.session.add(user)
               db.session.commit()
 
