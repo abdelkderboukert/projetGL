@@ -39,6 +39,10 @@ class userForm(FlaskForm):
     email = StringField("email", validators=[DataRequired()])
     password_hash = PasswordField("password", validators=[DataRequired(), equal_to('password_hash2', message='password must match!')])
     password_hash2 = PasswordField("password", validators=[DataRequired()]) 
+    dro = SelectField(u'Choose a programming language', choices=[
+        (0, 'patient'),
+        (1, 'doctor'),
+    ], render_kw={"placeholder": "login as"}, validators=[DataRequired()])
     submit = SubmitField('creat a new account')
 
 class loginForm(FlaskForm):
@@ -53,6 +57,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+    bro = db.Column(db.String(1), nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     post = db.relationship('to_do', backref='todos')  
 
