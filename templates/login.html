@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block title %} {{login}} {%endblock%} {% block head
+%}
+
+<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+{% endblock %} {%block body%}
+
+<section>
+  <div class="form-box">
+    <div class="form-value">
+      <form method="POST">
+        <h2>Login</h2>
+        <div class="inputbox">
+          <icon-icon name="mail-outline"></icon-icon>
+          {{ form.hidden_tag() }} {{ form.email() }}
+          <label for="">Email</label>
+        </div>
+        <div class="inputbox">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          {{ form.hidden_tag() }} {{ form.password() }}
+          <label for="">Password</label>
+        </div>
+        <div class="forget">
+          <label> {{ form.remember() }} Remember me </label>
+          <label>
+            <a href="#">Forgot password?</a>
+          </label>
+        </div>
+        <button>{{ form.submit(class="bt2") }}</button>
+        <div class="register">
+          <p>
+            Don't have a account ?
+            <a href="{{ url_for('add_user') }}">Register</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
