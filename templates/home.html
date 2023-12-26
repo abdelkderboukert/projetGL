@@ -8,7 +8,35 @@
 </head>
 
 <body>
+    <form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.spi(class="btnadd", autofocus=true) }}
+    {{ form.wil(class="btnadd", autofocus=true) }}
+    {{ form.submit() }}     
+    </form>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    <a href="{{ url_for('test', w=5, s=2) }}">
+        <button class="log_out"><h2>logout</h2></button>
+    </a>
+    
 
+      <a href="{{ url_for('log_out' )}}">
+        <button class="log_out"><h2>logout</h2></button>
+      </a>
 </body>
 
 </html>

@@ -43,7 +43,9 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     post = db.relationship('to_do', backref='todos')
     info = db.relationship('info', backref='info')
-    bro = db.Column(db.String(1), nullable=False, default=1)  
+    bro = db.Column(db.String(1), nullable=False, default=1)
+    spi = db.Column(db.String(12), nullable=False, default='userr')
+    wil = db.Column(db.String(2), nullable=False, default='userr')  
 
     @property
     def password(self):
@@ -85,8 +87,21 @@ class to_do(db.Model):
     def __repr__(self):
         return '<name %r>' % self.name
 
+class infod(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    prename = db.Column(db.String(30), nullable=False, default='userr')
+    datn = db.Column(db.DateTime, nullable=False)
+    adresse = db.Column(db.String(30), nullable=False, default='userr')
+    Ntph = db.Column(db.String(12), nullable=False, default='userr')
+
+
+    def __repr__(self):
+        return '<name %r>' % self.name
+
 #the forms
 class userForm(FlaskForm):
+
     name = StringField("name", validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired()])
     password_hash = PasswordField("password", validators=[DataRequired(), equal_to('password_hash2', message='password must match!')])
@@ -137,14 +152,92 @@ class addForm(FlaskForm):
     submit = SubmitField('create')
 
 class searchForm(FlaskForm):
-    search = StringField("search", validators=[DataRequired()])
+    spi = SelectField(u'Choose a programming language', choices=[
+        (1, ''),
+        (2, 'Highest'),
+        (3, 'Medium'),
+        (4, 'Normal'),
+        (5, ''),
+        (6, 'Highest'),
+        (7, 'Medium'),
+        (8, 'Normal'),
+    ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
+    wil = SelectField(u'Choose a programming language', choices=[
+        (1, ''),
+        (2, 'Highest'),
+        (3, 'Medium'),
+        (4, 'Normal'),
+        (5, ''),
+        (6, 'Highest'),
+        (7, 'Medium'),
+        (8, 'Normal'),
+        (9, ''),
+        (10, 'Highest'),
+        (11, 'Medium'),
+        (12, 'Normal'),
+        (13, ''),
+        (14, 'Highest'),
+        (15, 'Medium'),
+        (16, 'Normal'),
+        (17, ''),
+        (18, 'Highest'),
+        (19, 'Medium'),
+        (20, 'Normal'),
+        (21, ''),
+        (22, 'Highest'),
+        (23, 'Medium'),
+        (24, 'Normal'),
+        (25, ''),
+        (26, 'Highest'),
+        (27, 'Medium'),
+        (28, 'Normal'),
+        (29, ''),
+        (30, 'Highest'),
+        (31, 'Medium'),
+        (32, 'Normal'),
+        (33, ''),
+        (34, 'Highest'),
+        (35, 'Medium'),
+        (36, 'Normal'),
+        (37, ''),
+        (38, 'Highest'),
+        (39, 'Medium'),
+        (40, 'Normal'),
+        (41, ''),
+        (42, 'Highest'),
+        (43, 'Medium'),
+        (44, 'Normal'),
+        (45, ''),
+        (46, 'Highest'),
+        (47, 'Medium'),
+        (48, 'Highest'),
+        (59, 'Medium'),
+        (50, 'Normal'),
+        (51, ''),
+        (52, 'Highest'),
+        (53, 'Medium'),
+        (54, 'Normal'),
+        (55, ''),
+        (56, 'Highest'),
+        (57, 'Medium'),
+        (58, 'Normal'),
+
+    ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
     submit = SubmitField('search')
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/home', methods=['POST', 'GET'])
 @login_required
 def home():
+ form = searchForm()
+ if form.spi!=None:
+   redirect(url_for('test', w=form.wil.data, s=form.spi.data))
 
- return render_template('home.html')
+ return render_template('home.html',form=form)
+
+@app.route('/', methods=['POST', 'GET'])
+def intro():
+
+    return render_template('intro.html')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -153,7 +246,8 @@ def login():
         print(i[1].data)
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        passed = check_password_hash(user.password_hash, form.password.data )
+        passed = check_password_hash(
+        user.password_hash, form.password.data )
         if user is None or not passed :
             form.password.data = ''
             form.email.data = ''
@@ -207,36 +301,7 @@ def add_user():
 @login_required
 def log_out():
     logout_user()
-    return redirect(url_for('login'))
-
-@app.route('/add-daily', methods = ['GET', 'POST'])
-@login_required
-def add_daily():
-    form = addForm()
-    if form.validate_on_submit():
-        if form.hour_to_do == '':
-            form.hour_to_do= '8'
-        if form.min_to_do == '':
-            form.min_to_do= '00'
-        
-        k = int(form.rep.data)
-        p = int(form.dro.data)
-        hour = int(form.hour_to_do.data)
-        min = int(form.min_to_do.data)
-        while k!=-1:
-          if k!=0 : 
-           form.date_to_do.data = form.date_to_do.data + timedelta(days=1)
-          new_task = to_do(title=form.title.data, date_to_do=form.date_to_do.data, hour_to_do=hour, min_to_do=min, text=form.text.data,id_user= current_user.id , pre=p, val=0)
-          db.session.add(new_task)
-          db.session.commit()
-          k=k-1
-
-        
-        flash('Task added successfully!', 'success')
-        return redirect(url_for('todo'))
-
-    tasks = to_do.query.all()
-    return render_template('add_daily.html', form=form, tasks=tasks)
+    return redirect(url_for('intro'))
 
 @app.route('/delete/<int:task_id>')
 @login_required
@@ -253,42 +318,6 @@ def profil():
     inf = info.query.filter(info.id_user==current_user.id)
     return render_template('profil.html', inf=inf)
 
-@app.route('/arvhive', methods = ['GET', 'POST'])
-@login_required
-def archive():
-    form1 = todoForm() 
-    search_query = request.args.get('query')
-    if search_query:
-        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
-    else:
-        results = []
-    dailys=to_do.query.filter(to_do.id_user==current_user.id)
-    current_date = datetime.datetime.now().date()
-    current_hour = datetime.datetime.now().hour
-    return render_template('archive.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
-
-@app.route('/todo', methods = ['GET','POST'])
-@login_required
-def todo():
-    form1 = todoForm() 
-    search_query = request.args.get('query')
-    if search_query:
-        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
-    else:
-        results = []
-    dailys=to_do.query.filter(to_do.id_user==current_user.id).all()
-    current_date = datetime.datetime.now().date()
-    current_hour = datetime.datetime.now().hour
-    if request.method == "POST":
-     data = request.get_json()
-     daily_id = data['id']
-     dail = int(daily_id)
-     di = to_do.query.filter(to_do.id==dail).first()
-     di.val= '1'
-     db.session.add(di)
-     db.session.commit()
-    return render_template('todo.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
-    
 @app.route('/profil/edit', methods=['GET','POST'])
 @login_required
 def profil_edit():
@@ -322,36 +351,19 @@ def profil_edit():
     
     form.email.data = current_user.email
     form.name.data = current_user.name
-    return render_template('edit.html')
+    return render_template('edit.html', form=form)
 
 @app.route('/test', methods = ['POST','GET'])
-def test():
-    form = edit_userForm()
-    user = current_user
-    if form.validate_on_submit():
-        print(form.name.data)
-        if form.email.data == '':
-            form.email.data = user.email
-        if form.name.data == '':
-            form.name.data = user.name
-        print(form.name.data)
-        v = validate_email(form.email.data, verify=True)
-        if v:
-         user.name = form.name.data
-         user.email = form.email.data
-         print(user.name)
-         # update the database
-         db.session.commit()
-         # redirect to the profile page
-         return redirect(url_for('profil'))
-        else:
-            form.email.data = ''
-            return render_template('edit.html', form=form)
-        
-    form.email.data = user.email
-    form.name.data = user.name
-
-    return render_template('test.html', form=form)
+@app.route('/test/<w>/<s>', methods = ['POST','GET'])
+def test(w,s):
+    form = searchForm()
+    if w !=0:
+     docts = User.query.filter(User.bro==1 and User.wil==w and User.spi==s).all()
+    else:
+      docts = User.query.filter(User.bro==1 and User.spi==s).all()  
+    form.wil.data= w
+    form.spi.data= s
+    return render_template('search.html', form=form, docts=docts, w=w, s=s)
 
 with app.app_context():
         db.create_all()

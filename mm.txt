@@ -1,0 +1,70 @@
+@app.route('/todo', methods = ['GET','POST'])
+@login_required
+def todo():
+    form1 = todoForm() 
+    search_query = request.args.get('query')
+    if search_query:
+        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
+    else:
+        results = []
+    dailys=to_do.query.filter(to_do.id_user==current_user.id).all()
+    current_date = datetime.datetime.now().date()
+    current_hour = datetime.datetime.now().hour
+    if request.method == "POST":
+     data = request.get_json()
+     daily_id = data['id']
+     dail = int(daily_id)
+     di = to_do.query.filter(to_do.id==dail).first()
+     di.val= '1'
+     db.session.add(di)
+     db.session.commit()
+    return render_template('todo.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
+
+
+
+    @app.route('/add-daily', methods = ['GET', 'POST'])
+@login_required
+def add_daily():
+    form = addForm()
+    if form.validate_on_submit():
+        if form.hour_to_do == '':
+            form.hour_to_do= '8'
+        if form.min_to_do == '':
+            form.min_to_do= '00'
+        
+        k = int(form.rep.data)
+        p = int(form.dro.data)
+        hour = int(form.hour_to_do.data)
+        min = int(form.min_to_do.data)
+        while k!=-1:
+          if k!=0 : 
+           form.date_to_do.data = form.date_to_do.data + timedelta(days=1)
+          new_task = to_do(title=form.title.data, date_to_do=form.date_to_do.data, hour_to_do=hour, min_to_do=min, text=form.text.data,id_user= current_user.id , pre=p, val=0)
+          db.session.add(new_task)
+          db.session.commit()
+          k=k-1
+
+        
+        flash('Task added successfully!', 'success')
+        return redirect(url_for('todo'))
+
+    tasks = to_do.query.all()
+    return render_template('add_daily.html', form=form, tasks=tasks)
+
+
+
+
+
+@app.route('/arvhive', methods = ['GET', 'POST'])
+@login_required
+def archive():
+    form1 = todoForm() 
+    search_query = request.args.get('query')
+    if search_query:
+        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
+    else:
+        results = []
+    dailys=to_do.query.filter(to_do.id_user==current_user.id)
+    current_date = datetime.datetime.now().date()
+    current_hour = datetime.datetime.now().hour
+    return render_template('archive.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
