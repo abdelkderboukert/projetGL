@@ -12,9 +12,16 @@
     {{ w }}
     {% for doct in docts %}
     {{ doct.name }}
-    <a href="{{ url_for('test', id=doct.id) }}">
+    {% for infd in infds  %}
+     {% if infd.user_id==doct.id %}
+     {{ infd.prename }}
+     {{ infd.adresse }}
+     {{ infd.Ntph }}
+     {% endif %}
+     {% endfor %}
+     <a href="{{ url_for('test', id=doct.id) }}">
         <button class="log_out"><h2>profil</h2></button>
-    </a>
+     </a>
     {% endfor %}
     <a href="{{ url_for('home') }}">
         <button class="log_out"><h2>home</h2></button>

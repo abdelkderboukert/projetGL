@@ -17,6 +17,7 @@ from flask_migrate import Migrate
 from jinja2_time import TimeExtension
 from validate_email import validate_email
 
+
 app = Flask(__name__)
 #csrf = CSRFProtect(app)
 REMEMBER_COOKIE_DURATION = timedelta(days=0)
@@ -45,7 +46,8 @@ class User(db.Model, UserMixin):
     info = db.relationship('info', backref='info')
     bro = db.Column(db.String(1), nullable=False, default=1)
     spi = db.Column(db.String(12), nullable=False, default='userr')
-    wil = db.Column(db.String(2), nullable=False, default='userr')  
+    wil = db.Column(db.String(2), nullable=False, default='userr') 
+     
 
     @property
     def password(self):
@@ -65,9 +67,10 @@ class info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     prename = db.Column(db.String(30), nullable=False, default='userr')
-    datn = db.Column(db.DateTime, nullable=False)
+    datn = db.Column(db.String(30), nullable=False, default='userr')
     adresse = db.Column(db.String(30), nullable=False, default='userr')
     Ntph = db.Column(db.String(12), nullable=False, default='userr')
+    text = db.Column(db.Text)
 
     def __repr__(self):
         return '<name %r>' % self.name
@@ -91,9 +94,10 @@ class infod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     prename = db.Column(db.String(30), nullable=False, default='userr')
-    datn = db.Column(db.DateTime, nullable=False)
+    datn = db.Column(db.String(30), nullable=False, default='userr')
     adresse = db.Column(db.String(30), nullable=False, default='userr')
     Ntph = db.Column(db.String(12), nullable=False, default='userr')
+    text = db.Column(db.Text)
 
 
     def __repr__(self):
@@ -119,6 +123,7 @@ class edit_userForm(FlaskForm):
     adresse = StringField("adresse", validators=[DataRequired()], render_kw={"autocomplete": "adresse"})
     Ntph = StringField("N° telephone", validators=[DataRequired()], render_kw={"autocomplete": "N° telephone"})
     email = StringField("email", validators=[DataRequired()], render_kw={"autocomplete": "email"})
+    text = StringField("text", widget=TextArea())
     submit = SubmitField('update')
 
 class loginForm(FlaskForm):
@@ -246,8 +251,7 @@ def login():
         print(i[1].data)
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        passed = check_password_hash(
-        user.password_hash, form.password.data )
+        passed = check_password_hash(user.password_hash, form.password.data )
         if user is None or not passed :
             form.password.data = ''
             form.email.data = ''
@@ -281,7 +285,6 @@ def add_user():
               user = User(name=form.name.data, email=form.email.data, password_hash=hashed_pw, bro=form.bro.data)
               db.session.add(user)
               db.session.commit()
-
               flash("your account has been created please login ")
               return redirect(url_for('profil_edit'))
           else :
@@ -323,47 +326,59 @@ def profil():
 def profil_edit():
     form = edit_userForm()
     user = current_user
-    inf = info.query.filter(info.id_user==user.id)
+    print(form.Ntph.data)
+    if user.bro=="1":
+     inf = info.query.filter(info.id_user==user.id)
+    else:
+     inf = infod.query.filter(infod.id_user==user.id)
 
     if form.validate_on_submit():
+        print(form.Ntph.data)
+        print(form.datn.data)
         if form.email.data == '':
             form.email.data = user.email
-        print(form.email.data)
-        print(form.email.data)
         if form.name.data == '':
             form.name.data = user.name
 
         v = validate_email(form.email.data, verify=True)
         if v:
+         
          user.name = form.name.data
          user.email = form.email.data
+         db.session.commit()
          inf.prename = form.prename.data   
-         inf.addresse = form.prename.data
          inf.datn = form.datn.data
-         inf.Ntph = form.Ntph.data      
+         inf.Ntph = form.Ntph.data 
+         inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          # update the database
+         db.session.add(inf)
          db.session.commit()
         else:
             form.email.data = ''
             return render_template('edit.html', form=form)
         # redirect to the profile page
         return redirect(url_for('profil'))
+       
     
     form.email.data = current_user.email
     form.name.data = current_user.name
     return render_template('edit.html', form=form)
 
+
 @app.route('/test', methods = ['POST','GET'])
 @app.route('/test/<w>/<s>', methods = ['POST','GET'])
 def test(w,s):
     form = searchForm()
+    infds = info.query.all()
     if w !=0:
-     docts = User.query.filter(User.bro==1 and User.wil==w and User.spi==s).all()
+     docts = User.query.filter(User.bro==0 and User.wil==w and User.spi==s).all()
     else:
-      docts = User.query.filter(User.bro==1 and User.spi==s).all()  
+      docts = User.query.filter(User.bro==0 and User.spi==s).all()
+        
+
     form.wil.data= w
     form.spi.data= s
-    return render_template('search.html', form=form, docts=docts, w=w, s=s)
+    return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
 
 with app.app_context():
         db.create_all()

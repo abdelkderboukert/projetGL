@@ -6,12 +6,16 @@
     <title>Document</title>
 </head>
 <body>
+  <form method="POST">
     {{ form.hidden_tag() }} {{ form.name(placeholder= 'name') }}
     {{ form.hidden_tag() }} {{ form.prename(placeholder= 'prename') }}
     {{ form.hidden_tag() }} {{ form.adresse(placeholder= 'adresse') }}
-    {{ form.hidden_tag() }} {{ form.datn(placeholder= 'datenes') }}
+    {{ form.hidden_tag() }} {{ form.datn(placeholder= 'datn') }}          
+
     {{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem') }}
     {{ form.hidden_tag() }} {{ form.email(placeholder= 'email') }}
+    {{ form.submit() }}
+  </form>
     <a href="{{ url_for('home' )}}"
     ><button class="option">
       <h2><ion-icon name="home-outline"></ion-icon></h2>
