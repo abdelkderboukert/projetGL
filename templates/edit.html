@@ -14,6 +14,10 @@
 
     {{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem') }}
     {{ form.hidden_tag() }} {{ form.email(placeholder= 'email') }}
+    {{ form.hidden_tag() }} {{ form.wil(placeholder= 'wilaya') }}
+    {% if current_user.bro==0 %}
+    {{ form.hidden_tag() }} {{ form.spi(placeholder= 'spi') }}
+    {% endif %}
     {{ form.submit() }}
   </form>
     <a href="{{ url_for('home' )}}"

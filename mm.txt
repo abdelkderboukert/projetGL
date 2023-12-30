@@ -68,3 +68,8 @@ def archive():
     current_date = datetime.datetime.now().date()
     current_hour = datetime.datetime.now().hour
     return render_template('archive.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
+
+
+    //hi i use flask
+    //create for loop
+    

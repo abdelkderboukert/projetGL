@@ -123,6 +123,77 @@ class edit_userForm(FlaskForm):
     adresse = StringField("adresse", validators=[DataRequired()], render_kw={"autocomplete": "adresse"})
     Ntph = StringField("N° telephone", validators=[DataRequired()], render_kw={"autocomplete": "N° telephone"})
     email = StringField("email", validators=[DataRequired()], render_kw={"autocomplete": "email"})
+    spi = SelectField(u'Choose a programming language', choices=[
+        (1, ''),
+        (2, 'Highest'),
+        (3, 'Medium'),
+        (4, 'Normal'),
+        (5, ''),
+        (6, 'Highest'),
+        (7, 'Medium'),
+        (8, 'Normal'),
+    ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
+    wil = SelectField(u'Choose a programming language', choices=[
+        (1, ''),
+        (2, 'Highest'),
+        (3, 'Medium'),
+        (4, 'Normal'),
+        (5, ''),
+        (6, 'Highest'),
+        (7, 'Medium'),
+        (8, 'Normal'),
+        (9, ''),
+        (10, 'Highest'),
+        (11, 'Medium'),
+        (12, 'Normal'),
+        (13, ''),
+        (14, 'Highest'),
+        (15, 'Medium'),
+        (16, 'Normal'),
+        (17, ''),
+        (18, 'Highest'),
+        (19, 'Medium'),
+        (20, 'Normal'),
+        (21, ''),
+        (22, 'Highest'),
+        (23, 'Medium'),
+        (24, 'Normal'),
+        (25, ''),
+        (26, 'Highest'),
+        (27, 'Medium'),
+        (28, 'Normal'),
+        (29, ''),
+        (30, 'Highest'),
+        (31, 'Medium'),
+        (32, 'Normal'),
+        (33, ''),
+        (34, 'Highest'),
+        (35, 'Medium'),
+        (36, 'Normal'),
+        (37, ''),
+        (38, 'Highest'),
+        (39, 'Medium'),
+        (40, 'Normal'),
+        (41, ''),
+        (42, 'Highest'),
+        (43, 'Medium'),
+        (44, 'Normal'),
+        (45, ''),
+        (46, 'Highest'),
+        (47, 'Medium'),
+        (48, 'Highest'),
+        (59, 'Medium'),
+        (50, 'Normal'),
+        (51, ''),
+        (52, 'Highest'),
+        (53, 'Medium'),
+        (54, 'Normal'),
+        (55, ''),
+        (56, 'Highest'),
+        (57, 'Medium'),
+        (58, 'Normal'),
+
+    ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
     text = StringField("text", widget=TextArea())
     submit = SubmitField('update')
 
@@ -286,9 +357,11 @@ def add_user():
               db.session.add(user)
               db.session.commit()
               flash("your account has been created please login ")
+              print("your account has been created please login ")
               return redirect(url_for('profil_edit'))
           else :
               flash("this accont already exist please try to login")
+              print("this accont already exist please try to login")
               return redirect(url_for('login'))     
         else:
            form.email.data = ''
@@ -345,6 +418,8 @@ def profil_edit():
          
          user.name = form.name.data
          user.email = form.email.data
+         user.spi = form.spi.data
+         user.wil = form.wil.data
          db.session.commit()
          inf.prename = form.prename.data   
          inf.datn = form.datn.data
