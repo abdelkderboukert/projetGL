@@ -28,7 +28,7 @@ bcrypt = Bcrypt(app)  # Initialize Bcrypt
 # flask_login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = ['login', 'add_user']
 scheduler = APScheduler()
 
 @login_manager.user_loader
@@ -306,7 +306,7 @@ class searchForm(FlaskForm):
 def home():
  form = searchForm()
  if form.spi!=None:
-   redirect(url_for('test', w=form.wil.data, s=form.spi.data))
+   redirect(url_for('search', w=form.wil.data, s=form.spi.data))
 
  return render_template('home.html',form=form)
 
@@ -333,7 +333,10 @@ def login():
                 b = form.remember.data
                 flash("login successful")
                 login_user(user, remember=b)
-                return redirect(url_for('home'))
+                if user.wil!="userr":
+                 return redirect(url_for('home'))
+                else:
+                  return redirect(url_for('profil_edit'))  
             else :
                 flash("wrong password try again")
                 form.password.data = ''
@@ -358,7 +361,7 @@ def add_user():
               db.session.commit()
               flash("your account has been created please login ")
               print("your account has been created please login ")
-              return redirect(url_for('profil_edit'))
+              return redirect(url_for('login'))
           else :
               flash("this accont already exist please try to login")
               print("this accont already exist please try to login")
@@ -425,7 +428,7 @@ def profil_edit():
          inf.datn = form.datn.data
          inf.Ntph = form.Ntph.data 
          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
-         # update the database
+         # update the database00000
          db.session.add(inf)
          db.session.commit()
         else:
@@ -439,21 +442,33 @@ def profil_edit():
     form.name.data = current_user.name
     return render_template('edit.html', form=form)
 
-
-@app.route('/test', methods = ['POST','GET'])
-@app.route('/test/<w>/<s>', methods = ['POST','GET'])
-def test(w,s):
+@app.route('/search', methods = ['POST','GET'])
+@app.route('/search/<w>/<s>', methods = ['POST','GET'])
+def search(w,s):
     form = searchForm()
     infds = info.query.all()
-    if w !=0:
-     docts = User.query.filter(User.bro==0 and User.wil==w and User.spi==s).all()
+    if w !="0":
+     docts = User.query.filter(User.bro=="0" and User.wil==w and User.spi==s).all()
     else:
-      docts = User.query.filter(User.bro==0 and User.spi==s).all()
+      docts = User.query.filter(User.bro=="0" and User.spi==s).all()
         
 
     form.wil.data= w
     form.spi.data= s
     return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
+
+@app.route('/profil_doctor', methods = ['POST','GET'])
+@app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
+def profil_doctor(idu):
+    idd = int(idu)
+    user = User.query.filter(User.id==idd)
+    inf = infod.query.filter(infod.id_user==idd).first()
+    prename = inf.prename
+    datn = inf.datn
+    adresse = inf.adresse
+    Ntph = inf.Ntph
+    text = inf.text
+    return render_template('profil_doctor',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text)
 
 with app.app_context():
         db.create_all()

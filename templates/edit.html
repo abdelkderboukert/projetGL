@@ -15,16 +15,10 @@
     {{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem') }}
     {{ form.hidden_tag() }} {{ form.email(placeholder= 'email') }}
     {{ form.hidden_tag() }} {{ form.wil(placeholder= 'wilaya') }}
-    {% if current_user.bro==0 %}
+    {% if current_user.bro=="0" %}
     {{ form.hidden_tag() }} {{ form.spi(placeholder= 'spi') }}
     {% endif %}
     {{ form.submit() }}
   </form>
-    <a href="{{ url_for('home' )}}"
-    ><button class="option">
-      <h2><ion-icon name="home-outline"></ion-icon></h2>
-      <!--home-->
-    </button></a
-  >
 </body>
 </html>

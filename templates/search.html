@@ -13,15 +13,15 @@
     {% for doct in docts %}
     {{ doct.name }}
     {% for infd in infds  %}
-     {% if infd.user_id==doct.id %}
+     {% if infd.id_user==doct.id %}
      {{ infd.prename }}
      {{ infd.adresse }}
      {{ infd.Ntph }}
+     <a href="{{ url_for('profil_doctor', idu=doct.id) }}">
+        <button class="log_out"><h2>profil</h2></button>
+    </a>
      {% endif %}
      {% endfor %}
-     <a href="{{ url_for('test', id=doct.id) }}">
-        <button class="log_out"><h2>profil</h2></button>
-     </a>
     {% endfor %}
     <a href="{{ url_for('home') }}">
         <button class="log_out"><h2>home</h2></button>
