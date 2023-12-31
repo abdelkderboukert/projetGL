@@ -359,6 +359,13 @@ def add_user():
               user = User(name=form.name.data, email=form.email.data, password_hash=hashed_pw, bro=form.bro.data)
               db.session.add(user)
               db.session.commit()
+              if user.bro=="1":
+               inf = info(id_user=user.id, prename="pat", Ntph="pat", adresse="pat", datn="pat", text="someone")
+              else:
+               inf = infod(id_user=user.id, prename="doc", Ntph="doc", adresse="doc", datn="doc", text="someone")
+
+              db.session.add(inf)
+              db.session.commit()
               flash("your account has been created please login ")
               print("your account has been created please login ")
               return redirect(url_for('login'))
@@ -403,7 +410,10 @@ def profil_edit():
     form = edit_userForm()
     user = current_user
     print(form.Ntph.data)
-
+    if user.bro=="1":
+     inf = info.query.filter(info.id_user.id==user).first()
+    else:
+     inf = infod.query.filter(infod.id_user==user.id).first()
 
     if form.validate_on_submit():
         print(form.Ntph.data)
@@ -426,7 +436,7 @@ def profil_edit():
          inf.Ntph = form.Ntph.data 
          if user.bro=="1":
           inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
-         if user.bro=="0":
+         else:
           inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          # update the database00000
          db.session.add(inf)
