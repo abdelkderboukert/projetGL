@@ -403,10 +403,7 @@ def profil_edit():
     form = edit_userForm()
     user = current_user
     print(form.Ntph.data)
-    if user.bro=="1":
-     inf = info.query.filter(info.id_user==user.id)
-    else:
-     inf = infod.query.filter(infod.id_user==user.id)
+
 
     if form.validate_on_submit():
         print(form.Ntph.data)
@@ -427,7 +424,10 @@ def profil_edit():
          inf.prename = form.prename.data   
          inf.datn = form.datn.data
          inf.Ntph = form.Ntph.data 
-         inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
+         if user.bro=="1":
+          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
+         if user.bro=="0":
+          inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          # update the database00000
          db.session.add(inf)
          db.session.commit()
@@ -468,7 +468,7 @@ def profil_doctor(idu):
     adresse = inf.adresse
     Ntph = inf.Ntph
     text = inf.text
-    return render_template('profil_doctor',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text)
+    return render_template('profil_doctor',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email)
 
 with app.app_context():
         db.create_all()
