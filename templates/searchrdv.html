@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {{rd.id}}
+    {{rd.date_to_do.date()}}
+    {{rd_time}}
+    {{rd.text}}
+    {{rd.drname}}
+    {{rd.drid}}
+    {{rd.ptid}}
+    {{rd.name}}
+    {{rd.prename}}
+    {{pt.email}}
+    {{rd.ntph}}
+
+    <form method="POST">
+        {{ form1.new_text() }}
+    </form>
+    <a href="{{ url_for('home_doctor' )}}"
+    ><button class="option">
+      <h2><ion-icon name="home-outline"></ion-icon>home</h2>
+      <!--home-->
+    </button></a
+  >
+</body>
+</html>

@@ -42,7 +42,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(30), unique=False, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    post = db.relationship('to_do', backref='todos')
+    infod = db.relationship('infod', backref='infod')
     info = db.relationship('info', backref='info')
     bro = db.Column(db.String(1), nullable=False, default=1)
     spi = db.Column(db.String(12), nullable=False, default='userr')
@@ -288,6 +288,10 @@ class searchForm(FlaskForm):
     ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
     submit = SubmitField('search')
 
+class searchrdvForm(FlaskForm):
+   date_to_do = DateField('date_to_do', format='%Y-%m-%d', validators=[DataRequired()])
+   time_to_do = TimeField('time_to_do', format='%H:%M', validators=[DataRequired()])
+
 class rdvForm(FlaskForm):
    name = StringField("title", validators=[DataRequired()])
    prename = StringField("title", validators=[DataRequired()])
@@ -301,9 +305,9 @@ class rdvForm(FlaskForm):
    def date_time_to_do(self):
         return datetime.datetime.combine(self.date_to_do.data, self.time_to_do.data)
 
-class datForm(FlaskForm):
-   date = DateField('date', validators=[DataRequired()])
-   submit = SubmitField('submit')
+class AddTextForm(FlaskForm):
+    new_text = StringField('Enter the text you want to add:', validators=[DataRequired()])
+    submit = SubmitField('Add Text')
 
 @app.route('/home', methods=['POST', 'GET'])
 @login_required
@@ -315,6 +319,15 @@ def home():
   return redirect(url_for('search', w=form.wil.data, s=form.spi.data))
  else:
   return render_template('home.html',form=form)
+ 
+@app.route('/home_doctor', methods=['POST', 'GET'])
+@login_required
+def home_doctor():
+ form = searchrdvForm()
+ if request.method == 'POST':
+  return redirect(url_for('searchrdv', w=form.date_to_do.data, s=form.time_to_do.data))
+ else:
+  return render_template('home_doctor.html',form=form)
 
 @app.route('/', methods=['POST', 'GET'])
 def intro():
@@ -340,7 +353,11 @@ def login():
                 flash("login successful")
                 login_user(user, remember=b)
                 if user.wil!="userr":
-                 return redirect(url_for('home'))
+                 if user.bro=="0":
+                  return redirect(url_for('home_doctor'))
+                 else:
+                  return redirect(url_for('home'))
+                 
                 else:
                   return redirect(url_for('profil_edit'))  
             else :
@@ -395,14 +412,14 @@ def log_out():
     logout_user()
     return redirect(url_for('intro'))
 
-@app.route('/delete/<int:task_id>')
-@login_required
-def delete_task(task_id):
-    task = to_do.query.get_or_404(task_id)
-    db.session.delete(task)
-    db.session.commit()
-    flash('Task deleted successfully!', 'success')
-    return redirect(url_for('todo'))
+#@app.route('/delete/<int:task_id>')
+#@login_required
+#def delete_task(task_id):
+#    task = to_do.query.get_or_404(task_id)
+#    db.session.delete(task)
+#    db.session.commit()
+#    flash('Task deleted successfully!', 'success')
+#    return redirect(url_for('todo'))
 
 @app.route('/profil', methods = ['GET','POST'])
 @login_required
@@ -477,11 +494,26 @@ def search(w,s):
     else:
        return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
 
+@app.route('/searchrdv', methods = ['POST','GET'])
+@app.route('/searchrdv/<w>/<s>', methods = ['POST','GET'])
+def searchrdv(w,s):
+   form1 = AddTextForm()
+   datetime.datetime.combine(w,s)
+   rd = rdv.query.filter((rdv.date_to_do==datetime.datetime.combine(w,s)) and (rdv.drid==current_user.id)).first()
+   fr = info.query.filter(info.id_user==rd.ptid).first()
+   pt = User.query.filter(User.id==rd.ptid)
+   rd_time = rd.date_to_do.strftime('%H:%M')
+   if form1.validate_on_submit:
+      old_text = fr.text
+      new_text = form1.new_text.data
+      fr.text= old_text + new_text
+      db.session.commit()
+   return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt)
+
 #@app.route('/profil_doctor', methods = ['POST','GET'])
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 def profil_doctor(idu):
     form = rdvForm()
-    form1 = datForm()
     idd = int(idu)
     user = User.query.filter(User.id==idd).first()
     inf = infod.query.filter(infod.id_user==idd).first()
@@ -526,39 +558,7 @@ def profil_doctor(idu):
             times = []
 
 
-    return render_template('profil_doctor.html',form=form ,form1=form1 ,prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email, times=times)
-
-
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    times = []
-
-    if request.method == 'POST':
-        date_str = request.form['date']
-        date_format = '%Y-%m-%d'
-
-        try:
-            date = datetime.datetime.strptime(date_str, date_format)
-            start_time = datetime.datetime.combine(date, datetime.datetime.min.time())
-            end_time = datetime.datetime.combine(date, datetime.datetime.max.time())
-            current_time = start_time.replace(hour=8, minute=0)
-            end_time = end_time.replace(hour=16, minute=0)
-            pose_time = start_time.replace(hour=12, minute=0)
-            print(pose_time)
-            while current_time <= end_time:
-                if ((not rdv.query.filter(((rdv.date_to_do == current_time) and (rdv.drid==uid))).first()) and (not current_time==pose_time)):
-                    times.append(current_time.strftime('%I:%M %p'))
-
-                current_time += timedelta(minutes=30)
-
-            if len(times) > 0:
-                times.pop() 
-
-        except ValueError:
-            times = []
-        request.form['date']=date_str
-    return render_template('index.html', times=times)
-
+    return render_template('profil_doctor.html',form=form ,prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email, times=times)
 
 with app.app_context():
         db.create_all()
