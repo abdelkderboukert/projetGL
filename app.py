@@ -104,6 +104,7 @@ class infod(db.Model):
         return '<name %r>' % self.name
 
 class rdv(db.Model):
+   id = db.Column(db.Integer, primary_key=True)
    date_to_do = db.Column(db.DateTime, nullable=False)
    text = db.Column(db.Text)
    drname = db.Column(db.String(50), nullable=False)
@@ -496,7 +497,7 @@ def search(w,s):
     else:
        return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
 
-@app.route('/profil_doctor', methods = ['POST','GET'])
+#@app.route('/profil_doctor', methods = ['POST','GET'])
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 def profil_doctor(idu):
     form = rdvForm()
@@ -509,11 +510,83 @@ def profil_doctor(idu):
     Ntph = inf.Ntph
     text = inf.text
     if form.validate_on_submit():
-       rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
-       db.session.add(rv)
-       db.session.commit()
+       r = form.date_time_to_do().data+timedelta(minutes=30)
+       query = db.session.query(rdv).filter(rdv.date_to_do.between(form.date_time_to_do().data, r))
+       results = query.all()
+       if results is None:
+        rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
+        db.session.add(rv)
+        db.session.commit()
+       else:
+        form.date_to_do= ''
+        form.time_to_do= ''
 
-    return render_template('profil_doctor.html',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email)
+
+    times = []
+
+    if request.method == 'POST':
+        date_str = request.form['date']
+        date_format = '%Y-%m-%d'
+
+        try:
+            date = datetime.datetime.strptime(date_str, date_format)
+            start_time = datetime.datetime.combine(date, datetime.datetime.min.time())
+            end_time = datetime.datetime.combine(date, datetime.datetime.max.time())
+            current_time = start_time.replace(hour=8, minute=0)
+            end_time = end_time.replace(hour=16, minute=0)
+            pose_time = start_time.replace(hour=12, minute=0)
+            print(pose_time)
+            while current_time <= end_time:
+                if ((not rdv.query.filter((rdv.date_to_do == current_time)).first()) and (not current_time==pose_time)):
+                    times.append(current_time.strftime('%I:%M %p'))
+
+                current_time += timedelta(minutes=30)
+
+            if len(times) > 0:
+                times.pop() 
+
+        except ValueError:
+            times = []
+
+
+    form.name.data=current_user.name
+    form.prename=current_user.prename
+    form.date_to_do
+    form.time_to_do
+
+    return render_template('profil_doctor.html',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email, times=times)
+
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    times = []
+
+    if request.method == 'POST':
+        date_str = request.form['date']
+        date_format = '%Y-%m-%d'
+
+        try:
+            date = datetime.datetime.strptime(date_str, date_format)
+            start_time = datetime.datetime.combine(date, datetime.datetime.min.time())
+            end_time = datetime.datetime.combine(date, datetime.datetime.max.time())
+            current_time = start_time.replace(hour=8, minute=0)
+            end_time = end_time.replace(hour=16, minute=0)
+            pose_time = start_time.replace(hour=12, minute=0)
+            print(pose_time)
+            while current_time <= end_time:
+                if ((not rdv.query.filter((rdv.date_to_do == current_time)).first()) and (not current_time==pose_time)):
+                    times.append(current_time.strftime('%I:%M %p'))
+
+                current_time += timedelta(minutes=30)
+
+            if len(times) > 0:
+                times.pop() 
+
+        except ValueError:
+            times = []
+        request.form['date']=date_str
+    return render_template('index.html', times=times)
+
 
 with app.app_context():
         db.create_all()

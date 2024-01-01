@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Times Between 8 AM and 4 PM</title>
 </head>
 <body>
-    <section>
-    {{prename}} {{datn}} {{adresse}} {{Ntph}} {{text}} {{name}} {{spi}} {{wil}} {{email}}
-    </section>
-    <section>
     <h1>Times Between 8 AM and 4 PM</h1>
 
     <form method="post">
@@ -23,14 +19,5 @@
             <li>{{ time }}</li>
         {% endfor %}
     </ul>
-    {{form.name()}}
-    {{form.prename()}}
-    {{form.date_to_do(type="date")}}
-    {{form.time_to_do()}}
-    {{form.drname()}}
-    {{form.text()}}
-    {{form.ntph()}}
-    {{form.submit()}}
-    </section>
 </body>
 </html>
