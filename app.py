@@ -75,21 +75,6 @@ class info(db.Model):
     def __repr__(self):
         return '<name %r>' % self.name
 
-class to_do(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
-    text = db.Column(db.Text)
-    id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    date_to_do = db.Column(db.DateTime, nullable=False)
-    hour_to_do = db.Column(db.Integer, nullable=True, default=8)
-    min_to_do = db.Column(db.Integer, nullable=True, default=00)
-    val = db.Column(db.String(1), default=0)
-    pre = db.Column(db.String(1), default=3)
-    datenow = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-
-    def __repr__(self):
-        return '<name %r>' % self.name
-
 class infod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -214,15 +199,6 @@ class loginForm(FlaskForm):
     remember = BooleanField('Remember me')
     submit = SubmitField('login')     
     
-class todoForm(FlaskForm):
-    title = StringField("title", validators=[DataRequired()])
-    text = StringField("text", widget=TextArea())
-    date_to_do = DateField('date_to_do', format='%Y-%m-%d', validators=[DataRequired()])
-    hour_to_do = StringField("hour_to_do", validators=[DataRequired()])
-    min_to_do = StringField("min_to_do", validators=[DataRequired()])
-    checkbox = BooleanField("check if you do it")
-    submit = SubmitField('create')
-
 class addForm(FlaskForm):
     title = StringField("title", validators=[DataRequired()])
     text = StringField("text", widget=TextArea())
@@ -323,7 +299,11 @@ class rdvForm(FlaskForm):
    submit = SubmitField('create')
    
    def date_time_to_do(self):
-        return datetime.combine(self.date_to_do.data, self.time_to_do.data)
+        return datetime.datetime.combine(self.date_to_do.data, self.time_to_do.data)
+
+class datForm(FlaskForm):
+   date = DateField('date', validators=[DataRequired()])
+   submit = SubmitField('submit')
 
 @app.route('/home', methods=['POST', 'GET'])
 @login_required
@@ -501,6 +481,7 @@ def search(w,s):
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 def profil_doctor(idu):
     form = rdvForm()
+    form1 = datForm()
     idd = int(idu)
     user = User.query.filter(User.id==idd).first()
     inf = infod.query.filter(infod.id_user==idd).first()
@@ -509,22 +490,18 @@ def profil_doctor(idu):
     adresse = inf.adresse
     Ntph = inf.Ntph
     text = inf.text
-    if form.validate_on_submit():
-       r = form.date_time_to_do().data+timedelta(minutes=30)
-       query = db.session.query(rdv).filter(rdv.date_to_do.between(form.date_time_to_do().data, r))
-       results = query.all()
-       if results is None:
-        rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
+    if form.name.data != None:
+     if request.method == 'POST':
+        print(form.name.data)
+        rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user.id, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
         db.session.add(rv)
         db.session.commit()
-       else:
-        form.date_to_do= ''
-        form.time_to_do= ''
 
 
     times = []
-
-    if request.method == 'POST':
+    if form.name.data == None:
+     if request.method == 'POST':
+        print("bhhhhhh")
         date_str = request.form['date']
         date_format = '%Y-%m-%d'
 
@@ -537,7 +514,7 @@ def profil_doctor(idu):
             pose_time = start_time.replace(hour=12, minute=0)
             print(pose_time)
             while current_time <= end_time:
-                if ((not rdv.query.filter((rdv.date_to_do == current_time)).first()) and (not current_time==pose_time)):
+                if ((not rdv.query.filter(rdv.date_to_do == current_time).first()) and (not current_time==pose_time)):
                     times.append(current_time.strftime('%I:%M %p'))
 
                 current_time += timedelta(minutes=30)
@@ -549,12 +526,7 @@ def profil_doctor(idu):
             times = []
 
 
-    form.name.data=current_user.name
-    form.prename=current_user.prename
-    form.date_to_do
-    form.time_to_do
-
-    return render_template('profil_doctor.html',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email, times=times)
+    return render_template('profil_doctor.html',form=form ,form1=form1 ,prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email, times=times)
 
 
 @app.route('/index', methods=['GET', 'POST'])
@@ -574,7 +546,7 @@ def index():
             pose_time = start_time.replace(hour=12, minute=0)
             print(pose_time)
             while current_time <= end_time:
-                if ((not rdv.query.filter((rdv.date_to_do == current_time)).first()) and (not current_time==pose_time)):
+                if ((not rdv.query.filter(((rdv.date_to_do == current_time) and (rdv.drid==uid))).first()) and (not current_time==pose_time)):
                     times.append(current_time.strftime('%I:%M %p'))
 
                 current_time += timedelta(minutes=30)

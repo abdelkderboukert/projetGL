@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link
+    href="{{ url_for('static', filename='css/style_profil_doctor.css')}}"
+    rel="stylesheet"
+  />
 </head>
 <body>
     <section>
     {{prename}} {{datn}} {{adresse}} {{Ntph}} {{text}} {{name}} {{spi}} {{wil}} {{email}}
+    <a href="#sec2"><button>creat rdv</button></a>
     </section>
-    <section>
-    <h1>Times Between 8 AM and 4 PM</h1>
+    <section id="sec2">
+
 
     <form method="post">
         <label for="date">Date:</label>
+
         <input type="date" id="date" name="date" required>
         <button type="submit">Submit</button>
     </form>
@@ -23,14 +29,16 @@
             <li>{{ time }}</li>
         {% endfor %}
     </ul>
-    {{form.name()}}
-    {{form.prename()}}
-    {{form.date_to_do(type="date")}}
-    {{form.time_to_do()}}
-    {{form.drname()}}
-    {{form.text()}}
-    {{form.ntph()}}
-    {{form.submit()}}
+    <form method="post">
+      {{form.name()}}
+      {{form.prename()}}
+      {{form.date_to_do(type="date")}}
+      {{form.time_to_do()}}
+      {{form.drname()}}
+      {{form.text()}}
+      {{form.ntph()}}
+      {{form.submit()}}
+    </form>  
     </section>
 </body>
 </html>
