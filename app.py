@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from waitress import serve
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, IntegerField, DateField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, IntegerField, DateField, SelectField, TimeField
 from wtforms.validators import DataRequired, equal_to, Length
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
 from flask_bcrypt import Bcrypt  # Import Bcrypt
@@ -28,7 +28,7 @@ bcrypt = Bcrypt(app)  # Initialize Bcrypt
 # flask_login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = ['login', 'add_user']
+login_manager.login_view = 'login'
 scheduler = APScheduler()
 
 @login_manager.user_loader
@@ -102,6 +102,16 @@ class infod(db.Model):
 
     def __repr__(self):
         return '<name %r>' % self.name
+
+class rdv(db.Model):
+   date_to_do = db.Column(db.DateTime, nullable=False)
+   text = db.Column(db.Text)
+   drname = db.Column(db.String(50), nullable=False)
+   drid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+   ptid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+   name = db.Column(db.String(50), nullable=False)
+   prename = db.Column(db.String(50), nullable=False)
+   ntph = db.Column(db.String(13), nullable=False)
 
 #the forms
 class userForm(FlaskForm):
@@ -301,14 +311,29 @@ class searchForm(FlaskForm):
     ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
     submit = SubmitField('search')
 
+class rdvForm(FlaskForm):
+   name = StringField("title", validators=[DataRequired()])
+   prename = StringField("title", validators=[DataRequired()])
+   date_to_do = DateField('date_to_do', format='%Y-%m-%d', validators=[DataRequired()])
+   time_to_do = TimeField('time_to_do', format='%H:%M', validators=[DataRequired()])
+   drname = StringField("title", validators=[DataRequired()])
+   text = StringField("text", widget=TextArea())
+   ntph = StringField("tiliphon", validators=[DataRequired()])
+   submit = SubmitField('create')
+   
+   def date_time_to_do(self):
+        return datetime.combine(self.date_to_do.data, self.time_to_do.data)
+
 @app.route('/home', methods=['POST', 'GET'])
 @login_required
 def home():
  form = searchForm()
- if form.spi!=None:
-   redirect(url_for('search', w=form.wil.data, s=form.spi.data))
-
- return render_template('home.html',form=form)
+ if request.method == 'POST':
+  print(form.spi.data)
+  print(form.wil.data)
+  return redirect(url_for('search', w=form.wil.data, s=form.spi.data))
+ else:
+  return render_template('home.html',form=form)
 
 @app.route('/', methods=['POST', 'GET'])
 def intro():
@@ -434,12 +459,12 @@ def profil_edit():
          inf.prename = form.prename.data   
          inf.datn = form.datn.data
          inf.Ntph = form.Ntph.data 
+         inf.adresse = form.adresse.data
          if user.bro=="1":
           inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          else:
           inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          # update the database00000
-         db.session.add(inf)
          db.session.commit()
         else:
             form.email.data = ''
@@ -456,29 +481,39 @@ def profil_edit():
 @app.route('/search/<w>/<s>', methods = ['POST','GET'])
 def search(w,s):
     form = searchForm()
-    infds = info.query.all()
-    if w !="0":
-     docts = User.query.filter(User.bro=="0" and User.wil==w and User.spi==s).all()
-    else:
+    infds = infod.query.all()
+
+    if w =="1":
       docts = User.query.filter(User.bro=="0" and User.spi==s).all()
+    else:
+      docts = User.query.filter(User.bro=="0" and User.wil==w and User.spi==s).all()
         
 
     form.wil.data= w
     form.spi.data= s
-    return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
+    if w=="1" and s=="1":
+       return render_template('home.html', form=form)
+    else:
+       return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
 
 @app.route('/profil_doctor', methods = ['POST','GET'])
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 def profil_doctor(idu):
+    form = rdvForm()
     idd = int(idu)
-    user = User.query.filter(User.id==idd)
+    user = User.query.filter(User.id==idd).first()
     inf = infod.query.filter(infod.id_user==idd).first()
     prename = inf.prename
     datn = inf.datn
     adresse = inf.adresse
     Ntph = inf.Ntph
     text = inf.text
-    return render_template('profil_doctor',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email)
+    if form.validate_on_submit():
+       rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
+       db.session.add(rv)
+       db.session.commit()
+
+    return render_template('profil_doctor.html',prename=prename ,datn=datn ,adresse=adresse ,Ntph=Ntph ,text=text, name=user.name, spi=user.spi, wil=user.wil, email=user.email)
 
 with app.app_context():
         db.create_all()
