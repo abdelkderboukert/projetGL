@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link
+    href="{{ url_for('static', filename='css/style_edit.css')}}"
+    rel="stylesheet"
+  />
 </head>
 <body>
   <form method="POST">
@@ -11,13 +15,15 @@
     {{ form.hidden_tag() }} {{ form.prename(placeholder= 'prename') }}
     {{ form.hidden_tag() }} {{ form.adresse(placeholder= 'adresse') }}
     {{ form.hidden_tag() }} {{ form.datn(placeholder= 'datn') }}          
-
+    
     {{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem') }}
     {{ form.hidden_tag() }} {{ form.email(placeholder= 'email') }}
     {{ form.hidden_tag() }} {{ form.wil(placeholder= 'wilaya') }}
     {% if current_user.bro=="0" %}
     {{ form.hidden_tag() }} {{ form.spi(placeholder= 'spi') }}
+    {{ form.hidden_tag() }} {{ form.text(placeholder= 'text') }}
     {% endif %}
+    {{ form.hidden_tag() }} {{ form.text(placeholder= 'nem') }}
     {{ form.submit() }}
   </form>
 </body>

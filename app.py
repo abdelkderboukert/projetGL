@@ -291,6 +291,7 @@ class searchForm(FlaskForm):
 class searchrdvForm(FlaskForm):
    date_to_do = DateField('date_to_do', format='%Y-%m-%d', validators=[DataRequired()])
    time_to_do = TimeField('time_to_do', format='%H:%M', validators=[DataRequired()])
+   submit = SubmitField('search')
 
 class rdvForm(FlaskForm):
    name = StringField("title", validators=[DataRequired()])
@@ -412,15 +413,6 @@ def log_out():
     logout_user()
     return redirect(url_for('intro'))
 
-#@app.route('/delete/<int:task_id>')
-#@login_required
-#def delete_task(task_id):
-#    task = to_do.query.get_or_404(task_id)
-#    db.session.delete(task)
-#    db.session.commit()
-#    flash('Task deleted successfully!', 'success')
-#    return redirect(url_for('todo'))
-
 @app.route('/profil', methods = ['GET','POST'])
 @login_required
 def profil():
@@ -432,13 +424,12 @@ def profil():
 def profil_edit():
     form = edit_userForm()
     user = current_user
-    print(form.Ntph.data)
     if user.bro=="1":
-     inf = info.query.filter(info.id_user.id==user).first()
+     inf = info.query.filter(info.id_user==user.id).first()
     else:
      inf = infod.query.filter(infod.id_user==user.id).first()
 
-    if form.validate_on_submit():
+    if request.method=="POST":
         print(form.Ntph.data)
         print(form.datn.data)
         if form.email.data == '':
@@ -446,34 +437,39 @@ def profil_edit():
         if form.name.data == '':
             form.name.data = user.name
 
+
         v = validate_email(form.email.data, verify=True)
         if v:
-         
+         user.id= user.id
          user.name = form.name.data
          user.email = form.email.data
-         user.spi = form.spi.data
+         if form.spi.data=="":
+          user.spi = "userr"
          user.wil = form.wil.data
          db.session.commit()
          inf.prename = form.prename.data   
          inf.datn = form.datn.data
          inf.Ntph = form.Ntph.data 
          inf.adresse = form.adresse.data
+         if form.text.data=='':
+          inf.text = "somone"
+         else:
+          inf.text = form.text.data
          if user.bro=="1":
           inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
          else:
           inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
-         # update the database00000
          db.session.commit()
+         return redirect(url_for('profil'))
         else:
             form.email.data = ''
             return render_template('edit.html', form=form)
         # redirect to the profile page
-        return redirect(url_for('profil'))
-       
+    else:  
+     form.email.data = current_user.email
+     form.name.data = current_user.name
+     return render_template('edit.html', form=form)
     
-    form.email.data = current_user.email
-    form.name.data = current_user.name
-    return render_template('edit.html', form=form)
 
 @app.route('/search', methods = ['POST','GET'])
 @app.route('/search/<w>/<s>', methods = ['POST','GET'])
@@ -528,12 +524,19 @@ def profil_doctor(idu):
         rv = rdv(date_to_do =form.date_time_to_do(), text =form.text.data, drname =form.drname.data, drid =idu, ptid =current_user.id, name =form.name.data , prename =form.name.data, ntph =form.ntph.data)
         db.session.add(rv)
         db.session.commit()
+        form.name.data= ''
+        form.prename.data= ''
+        form.date_to_do.data= ''
+        form.time_to_do.data= ''
+        form.drname.data= ''
+        form.text.data= ''
+        form.ntph.data= ''
+        form.submit.data= ''
 
 
     times = []
     if form.name.data == None:
      if request.method == 'POST':
-        print("bhhhhhh")
         date_str = request.form['date']
         date_format = '%Y-%m-%d'
 
