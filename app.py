@@ -332,7 +332,6 @@ def home_doctor():
 
 @app.route('/', methods=['POST', 'GET'])
 def intro():
-
     return render_template('intro.html')
 
 @app.route('/login', methods=['POST', 'GET'])

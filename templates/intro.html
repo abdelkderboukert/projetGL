@@ -9,19 +9,50 @@
     href="{{ url_for('static', filename='css/style_intro.css')}}"
     rel="stylesheet"
   />
+
 </head>
 
 <body>
-    <a href="{{ url_for('login') }}"><button class="pro">
-            <h3>
-                login <ion-icon name="albums-outline"></ion-icon>
-            </h3>
-        </button></a>
-    <a href="{{ url_for('add_user') }}"><button class="pro">
-            <h3>
-                registre <ion-icon name="albums-outline"></ion-icon>
-            </h3>
-        </button></a>
+
+        <div class="header">
+            <div class="header-content">
+              <div class="logo">
+                <img src="MeDomeService" alt="MeDomeService">
+              </div>
+              <nav class="navigation">
+                <ul>
+                  <li><a href="../html/home.html">Rendez-vous</a></li>
+                  <li><a href="#pricing">Pricing</a></li>
+                  <li><a href="#resell">Resell</a></li>
+                  <li><a href="#faq">FAQ</a></li>
+                </ul>
+              </nav>
+              <div class="start-for-free">
+                <a href="{{ url_for('login') }}"><button class="start-btn">
+                    <h3>
+                        login <ion-icon name="albums-outline"></ion-icon>
+                    </h3>
+                </button></a>
+              </div>
+              <div class="start-for-free">
+                <a href="{{ url_for('add_user') }}"><button class="start-btn">
+                    <h3>
+                        registre <ion-icon name="albums-outline"></ion-icon>
+                    </h3>
+                </button></a>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Body Section -->
+          <div class="body">
+          
+              <div class="background-image">
+                <!-- Background image will be set via CSS -->
+                <p class="highlighted-text">The  Only <span class="title-word title-word-1"> Management</span> <br>
+                  <span class="title-word title-word-2">Platform</span> You Will Ever <br> Need</p>
+              </div>     
+          </div>
 </body>
 
 </html>

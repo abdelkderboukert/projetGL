@@ -1,39 +1,38 @@
 {% extends 'base.html' %} {% block title %} {{login}} {%endblock%} {% block head
 %}
 
-<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+<link href="{{ url_for('static', filename='css/style1.css')}}" rel="stylesheet" />
 {% endblock %} {%block body%}
 
-<section>
-  <div class="form-box">
-    <div class="form-value">
-      <form method="POST">
-        <h2>Login</h2>
-        <div class="inputbox">
-          <icon-icon name="mail-outline"></icon-icon>
-          {{ form.hidden_tag() }} {{ form.email() }}
-          <label for="">Email</label>
-        </div>
-        <div class="inputbox">
-          <ion-icon name="lock-closed-outline"></ion-icon>
-          {{ form.hidden_tag() }} {{ form.password() }}
-          <label for="">Password</label>
-        </div>
-        <div class="forget">
-          <label> {{ form.remember() }} Remember me </label>
-          <label>
-            <a href="#">Forgot password?</a>
-          </label>
-        </div>
-        <button>{{ form.submit(class="bt2") }}</button>
-        <div class="register">
-          <p>
-            Don't have a account ?
-            <a href="{{ url_for('add_user') }}">Register</a>
-          </p>
-        </div>
-      </form>
-    </div>
+<div class="container">
+  <div class="left-section">
+    <img src="{{ url_for('static', filename='photos/ph1.jpg')}}" alt="Image" class="image">
+   
   </div>
-</section>
+  <div class="right-section">
+      <div class="welcome-text">
+          <h2>Welcome to MeDomeService</h2>
+        </div>
+    <div class="login-box" id="login-box">
+      <form method="POST">
+      <h2>Tell us about you</h2>
+      <div class="input-group">
+        <!--<input type="text" id="username" placeholder="Organization or Clinic Name" required>-->
+        {{ form.hidden_tag() }} {{ form.email(id="username" ,placeholder="your email") }}
+      </div>
+      <div class="input-group">
+        <!--<input type="text" id="password" placeholder="Your Title or Name (eg: Dr John Doe)" required>-->
+        {{ form.hidden_tag() }} {{ form.password(id="password" ,placeholder="Your password")}}
+      </div>
+      <div class="register">
+        <p>
+          Don't have a account ?
+          <a href="{{ url_for('add_user') }}">Register</a>
+        </p>
+      </div>
+      {{ form.submit(class="bt") }}
+    </form>
+    </div>
+</div>
+
 {% endblock %}

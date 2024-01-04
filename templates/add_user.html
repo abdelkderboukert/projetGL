@@ -1,50 +1,42 @@
 {% extends 'base.html' %} {% block title %} Register {%endblock%} {% block head
     %}
     <link
-      href="{{ url_for('static', filename='css/style.css')}}"
+      href="{{ url_for('static', filename='css/style1.css')}}"
       rel="stylesheet"
     />
     {% endblock %} {%block body%}
-    
-    <section>
-      <div class="form-box">
-        <div class="form-value">
-          <form method="POST">
-            <h2>Register</h2>
-            <div class="inputbox">
-              <ion-icon name="mail-outline"></ion-icon>
-              {{ form.hidden_tag() }} {{ form.name() }}
-              <label for="">Name</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="mail-outline"></ion-icon>
-              {{ form.hidden_tag() }} {{ form.email() }}
-              <label for="">Email</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              {{ form.hidden_tag() }} {{ form.password_hash() }}
-              <label for="">Password</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              {{ form.hidden_tag() }} {{ form.password_hash2() }}
-              <label for="">password confirmation</label>
-            </div>
-            {{ form.hidden_tag() }} {{ form.bro() }}
-            <div class="forget">
-              <label>
-                <h3>make sur that you put the right information</h3>
-              </label>
-            </div>
-            <button>{{ form.submit(class="bt2") }}</button>
-            <div class="register">
-              <p>
-                I already have an account <a href="{{ url_for('login') }}">login</a>
-              </p>
-            </div>
-          </form>
-        </div>
+
+    <div class="container">
+      <div class="left-section">
+        <img src="{{ url_for('static', filename='photos/ph1.jpg')}}" alt="Image" class="image">
+       
       </div>
-    </section>
+      <div class="right-section">
+          <div class="welcome-text">
+              <h2>Welcome to MeDomeService</h2>
+            </div>
+        <div class="login-box" id="login-box">
+          <form method="POST">
+          <h2>Tell us about you</h2>
+          <div class="input-group">
+            {{ form.hidden_tag() }} {{ form.name(id="username" ,placeholder="your name") }}
+          </div>
+          <div class="input-group">
+            {{ form.hidden_tag() }} {{ form.email(id="password" ,placeholder="Your email")}}
+          </div>
+          <div class="input-group">
+            {{ form.hidden_tag() }} {{ form.password_hash(id="password" ,placeholder="Your password")}}
+          </div>
+          <div class="input-group">
+            {{ form.hidden_tag() }} {{ form.password_hash2(id="password" ,placeholder="Your password")}}
+          </div>
+          <div class="register">
+            <p>
+              I already have an account <a href="{{ url_for('login') }}">login</a>
+            </p>
+          </div>
+          {{ form.submit(class="bt") }}
+        </form>
+        </div>
+    </div>
     {% endblock %}

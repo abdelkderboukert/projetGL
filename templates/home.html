@@ -2,46 +2,111 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link
-    href="{{ url_for('static', filename='css/style_home.css')}}"
-    rel="stylesheet"
-  />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="{{ url_for('static', filename='css/style_home.css')}}" rel="stylesheet" />
 </head>
 
 <body>
-    <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.spi(class="btnadd", autofocus=true) }}
-    {{ form.wil(class="btnadd", autofocus=true) }}
-    {{ form.submit() }}     
-    </form>
-    <a href="{{ url_for('search', w=2, s=2) }}">
-        <button class="log_out"><h2>s1</h2></button>
-    </a>
-    <a href="{{ url_for('search', w=0, s=2) }}">
-        <button class="log_out"><h2>s6</h2></button>
-    </a>
-    <a href="{{ url_for('search', w=0, s=3) }}">
-        <button class="log_out"><h2>s5</h2></button>
-    </a>
-    <a href="{{ url_for('search', w=0, s=4) }}">
-        <button class="log_out"><h2>s4</h2></button>
-    </a>
-    <a href="{{ url_for('search', w=0, s=5) }}">
-        <button class="log_out"><h2>s3</h2></button>
-    </a>
-    <a href="{{ url_for('search', w=0, s=6) }}">
-        <button class="log_out"><h2>s2</h2></button>
-    </a>
+  <header>
+    <h2>MeDomeService</h2>
+  </header>
+  <main>
+    <section class="info">
+      <h1>Trouvez un rendez-vous avec</h1>
+      <section class="animation">
+        <div class="first">
+          <div>Médecine générale</div>
+        </div>
+        <div class="second">
+          <div>Cardiologue</div>
+        </div>
+        <div class="third">
+          <div>Radiologue</div>
+        </div>
+
+
+
+
+
+      </section>
+    </section>
+    <div id="cont"><form method="POST">
+      <div class="search">
+       <!-- -->
+          
+          {{ form.hidden_tag() }}
+          <div id="spi">
+            {{ form.spi(class="btnadd",id="bt1", autofocus=true) }}
+          </div>
+          <div id="wil">
+            {{ form.wil(class="btnadd",id="bt2", autofocus=true) }}
+          </div>
+          <div id="sb">
+            {{ form.submit() }}
+          </div>
+        
+        <!-- -->
+      </div></form>
+      <div class="ff" id="fast">
+        <div id="fast-1"> 
+         <a href="{{ url_for('search', w=2, s=2) }}">
+          <button class="ss">
+            <h2>s1</h2>
+          </button>
+         </a>
+         <a href="{{ url_for('search', w=0, s=2) }}">
+          <button class="ss">
+            <h2>s6</h2>
+          </button>
+         </a>
+         <a href="{{ url_for('search', w=0, s=3) }}">
+          <button class="ss">
+            <h2>s5</h2>
+          </button>
+         </a>
+         <a href="{{ url_for('search', w=0, s=4) }}">
+          <button class="ss">
+            <h2>s4</h2>
+          </button>
+         </a>
+       </div>
+       <div id="fast-2">
+        <a href="{{ url_for('search', w=0, s=5) }}">
+          <button class="ss">
+            <h2>s3</h2>
+          </button>
+        </a>
+        <a href="{{ url_for('search', w=0, s=6) }}">
+          <button class="ss">
+            <h2>s2</h2>
+          </button>
+        </a>
+        <a href="{{ url_for('search', w=0, s=6) }}">
+          <button class="ss">
+            <h2>s2</h2>
+          </button>
+        </a>
+        <a href="{{ url_for('search', w=0, s=6) }}">
+          <button class="ss">
+            <h2>s2</h2>
+          </button>
+        </a>
+       </div>
+      </div>
       <a href="{{ url_for('log_out' )}}">
-        <button class="log_out"><h2>logout</h2></button>
+        <button class="log_out">
+          <h2>logout</h2>
+        </button>
       </a>
       <a href="{{ url_for('profil' )}}">
-        <button class="log_out"><h2>profil</h2></button>
+        <button class="log_out">
+          <h2>profil</h2>
+        </button>
       </a>
+    </div>
+  </main>
 </body>
 
 </html>
