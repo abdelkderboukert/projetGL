@@ -30,6 +30,9 @@
           <div class="input-group">
             {{ form.hidden_tag() }} {{ form.password_hash2(id="password" ,placeholder="Your password")}}
           </div>
+          <div class="input-group">
+            {{ form.hidden_tag() }} {{ form.bro(id="popo")}}
+          </div>
           <div class="register">
             <p>
               I already have an account <a href="{{ url_for('login') }}">login</a>

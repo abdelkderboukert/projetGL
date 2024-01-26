@@ -10,7 +10,25 @@
 
 <body>
   <header>
-    <h2>MeDomeService</h2>
+    <div class="he flex-row">
+      <div id="titr">
+        <h2>MeDomeService</h2>
+      </div>
+      <div id="btt1">
+      <a href="{{ url_for('profil' )}}">
+        <button class="log_out">
+          profil
+        </button>
+      </a>
+      </div>
+      <div id="btt2">
+      <a href="{{ url_for('log_out' )}}">
+        <button class="log_out">
+          logout
+        </button>
+      </a>
+    </div>
+    </div>
   </header>
   <main>
     <section class="info">
@@ -32,81 +50,79 @@
 
       </section>
     </section>
-    <div id="cont"><form method="POST">
-      <div class="search">
-       <!-- -->
-          
-          {{ form.hidden_tag() }}
-          <div id="spi">
-            {{ form.spi(class="btnadd",id="bt1", autofocus=true) }}
+    <div id="cont">
+      <div id="sh">
+        <form method="POST">
+          <div class="search">
+            <!-- -->
+
+            {{ form.hidden_tag() }}
+            <div id="spi">
+              {{ form.spi(class="btnadd",id="bt1", autofocus=true) }}
+            </div>
+            <ion-icon name="people-circle-outline" id="doct"></ion-icon>
+            <div id="wil">
+              {{ form.wil(class="btnadd",id="bt2", autofocus=true) }}
+            </div>
+            <ion-icon name="navigate-outline" id="posi"></ion-icon>
+            <div id="sb">
+              {{ form.submit(id="sbb") }}
+            </div>
+
+            <!-- -->
           </div>
-          <div id="wil">
-            {{ form.wil(class="btnadd",id="bt2", autofocus=true) }}
-          </div>
-          <div id="sb">
-            {{ form.submit() }}
-          </div>
-        
-        <!-- -->
-      </div></form>
-      <div class="ff" id="fast">
-        <div id="fast-1"> 
-         <a href="{{ url_for('search', w=2, s=2) }}">
-          <button class="ss">
-            <h2>s1</h2>
-          </button>
-         </a>
-         <a href="{{ url_for('search', w=0, s=2) }}">
-          <button class="ss">
-            <h2>s6</h2>
-          </button>
-         </a>
-         <a href="{{ url_for('search', w=0, s=3) }}">
-          <button class="ss">
-            <h2>s5</h2>
-          </button>
-         </a>
-         <a href="{{ url_for('search', w=0, s=4) }}">
-          <button class="ss">
-            <h2>s4</h2>
-          </button>
-         </a>
-       </div>
-       <div id="fast-2">
-        <a href="{{ url_for('search', w=0, s=5) }}">
-          <button class="ss">
-            <h2>s3</h2>
-          </button>
-        </a>
-        <a href="{{ url_for('search', w=0, s=6) }}">
-          <button class="ss">
-            <h2>s2</h2>
-          </button>
-        </a>
-        <a href="{{ url_for('search', w=0, s=6) }}">
-          <button class="ss">
-            <h2>s2</h2>
-          </button>
-        </a>
-        <a href="{{ url_for('search', w=0, s=6) }}">
-          <button class="ss">
-            <h2>s2</h2>
-          </button>
-        </a>
-       </div>
+        </form>
       </div>
-      <a href="{{ url_for('log_out' )}}">
-        <button class="log_out">
-          <h2>logout</h2>
-        </button>
-      </a>
-      <a href="{{ url_for('profil' )}}">
-        <button class="log_out">
-          <h2>profil</h2>
-        </button>
-      </a>
+      <div class="ff" id="fast">
+        <div id="fast-1">
+          <a href="{{ url_for('search', w=2, s=2) }}">
+            <button class="ss">
+              <h2>Dentist</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=2) }}">
+            <button class="ss">
+              <h2>Ophthamlmol..</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=3) }}">
+            <button class="ss">
+              <h2>Cardiologist</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=4) }}">
+            <button class="ss">
+              <h2>Diabetologist</h2>
+            </button>
+          </a>
+        </div>
+        <div id="fast-2">
+          <a href="{{ url_for('search', w=0, s=5) }}">
+            <button class="ss">
+              <h2>Orthopedic</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=6) }}">
+            <button class="ss">
+              <h2>General</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=6) }}">
+            <button class="ss">
+              <h2>Allergist</h2>
+            </button>
+          </a>
+          <a href="{{ url_for('search', w=0, s=6) }}">
+            <button class="ss">
+              <h2>Nutritionist</h2>
+            </button>
+          </a>
+        </div>
+      </div>
     </div>
   </main>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

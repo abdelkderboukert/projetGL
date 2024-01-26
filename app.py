@@ -17,6 +17,7 @@ from flask_migrate import Migrate
 from jinja2_time import TimeExtension
 from validate_email import validate_email
 import stripe
+import os
 
 
 app = Flask(__name__)
@@ -372,11 +373,14 @@ def login():
 def add_user():
     form = userForm()
     if form.validate_on_submit():
+        print("1")
         v = validate_email(form.email.data, verify=True)
         if v:
+          print("2")
           user = User.query.filter_by(email=form.email.data).first()
           print('''user: {user}''')
           if user is None:
+              print("3")
               #hash password!!
               hashed_pw = generate_password_hash(form.password_hash.data)
               user = User(name=form.name.data, email=form.email.data, password_hash=hashed_pw, bro=form.bro.data)

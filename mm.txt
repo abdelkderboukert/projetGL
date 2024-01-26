@@ -1,75 +1,24 @@
-@app.route('/todo', methods = ['GET','POST'])
-@login_required
-def todo():
-    form1 = todoForm() 
-    search_query = request.args.get('query')
-    if search_query:
-        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
-    else:
-        results = []
-    dailys=to_do.query.filter(to_do.id_user==current_user.id).all()
-    current_date = datetime.datetime.now().date()
-    current_hour = datetime.datetime.now().hour
-    if request.method == "POST":
-     data = request.get_json()
-     daily_id = data['id']
-     dail = int(daily_id)
-     di = to_do.query.filter(to_do.id==dail).first()
-     di.val= '1'
-     db.session.add(di)
-     db.session.commit()
-    return render_template('todo.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
+ transform: scale(1.1); tkbr w tsghr tswira 
+ transform: rotate(x deg); tbdl zawiya ta3 7ja
+ transition: 1s; w9t li diro bah ysra animation
+ transition: (animation)(w9t b sicpnd), nfs 7ja   (w8t binathom);
+ opacity: x; ch7al yban elemant
 
 
+ @keyframes (asmh animation){
+    from{(wint tbda)}
+    to{(win tkhlas)}
+ }
+ @keyframes (asmh animation){
+    0%{(wint tbda)}
+    10%{(2eme animation)}
+    100%{(win tkhlas)}
+ }
+ 1 animation-name: (asmh animation);
+ 2 animation-duration: w9t b secund bah chal t93od;
+ 4 animation-iteration-count: ch7al tt3wd wla aktb "infinite" bah my7bsch g3;
+ 3 animation-timing-fonction: cubic-bezier(x,y,z,w); tro7 l cubic-bezier.com tjbdhom hna t9dr tbdl sor3a ta3 animation f w9t li 7bit ("linear" par defu )
 
-    @app.route('/add-daily', methods = ['GET', 'POST'])
-@login_required
-def add_daily():
-    form = addForm()
-    if form.validate_on_submit():
-        if form.hour_to_do == '':
-            form.hour_to_do= '8'
-        if form.min_to_do == '':
-            form.min_to_do= '00'
-        
-        k = int(form.rep.data)
-        p = int(form.dro.data)
-        hour = int(form.hour_to_do.data)
-        min = int(form.min_to_do.data)
-        while k!=-1:
-          if k!=0 : 
-           form.date_to_do.data = form.date_to_do.data + timedelta(days=1)
-          new_task = to_do(title=form.title.data, date_to_do=form.date_to_do.data, hour_to_do=hour, min_to_do=min, text=form.text.data,id_user= current_user.id , pre=p, val=0)
-          db.session.add(new_task)
-          db.session.commit()
-          k=k-1
+ animation: 1 2 3 4
 
-        
-        flash('Task added successfully!', 'success')
-        return redirect(url_for('todo'))
-
-    tasks = to_do.query.all()
-    return render_template('add_daily.html', form=form, tasks=tasks)
-
-
-
-
-
-@app.route('/arvhive', methods = ['GET', 'POST'])
-@login_required
-def archive():
-    form1 = todoForm() 
-    search_query = request.args.get('query')
-    if search_query:
-        results = to_do.query.filter(to_do.title.like(f'%{search_query}%')).all()
-    else:
-        results = []
-    dailys=to_do.query.filter(to_do.id_user==current_user.id)
-    current_date = datetime.datetime.now().date()
-    current_hour = datetime.datetime.now().hour
-    return render_template('archive.html', dailys=dailys, form1=form1, date= current_date, hour= current_hour, results=results, search_query=search_query)
-
-
-    //hi i use flask
-    //create for loop
-    
+ transform-origin:x px(ymin w ysar mkwna lisra) y px(fo9 w lt7t)
