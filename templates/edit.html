@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link
-    href="{{ url_for('static', filename='css/style_edit.css')}}"
-    rel="stylesheet"
-  />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="{{ url_for('static', filename='css/style_edit.css')}}" rel="stylesheet" />
 </head>
+
 <body>
-  <form method="POST">
-    {{ form.hidden_tag() }} {{ form.name(placeholder= 'name') }}
-    {{ form.hidden_tag() }} {{ form.prename(placeholder= 'prename') }}
-    {{ form.hidden_tag() }} {{ form.adresse(placeholder= 'adresse') }}
-    {{ form.hidden_tag() }} {{ form.datn(placeholder= 'datn') }}          
-    
-    {{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem') }}
-    {{ form.hidden_tag() }} {{ form.email(placeholder= 'email') }}
-    {{ form.hidden_tag() }} {{ form.wil(placeholder= 'wilaya') }}
-    {% if current_user.bro=="0" %}
-    {{ form.hidden_tag() }} {{ form.spi(placeholder= 'spi') }}
-    {{ form.hidden_tag() }} {{ form.text(placeholder= 'text') }}
-    {% endif %}
-    {{ form.submit() }}
-  </form>
+  <section style="background-image: url('{{ url_for('static', filename='photos/ph4.jpg')}}');" id="contt">
+    <div class="cont">
+        <p id="titre">Share Your Iinformation With Us</p>
+        <a href="{{ url_for('profil' )}}">
+          <button class="log_out">
+            profil
+          </button>
+        </a>
+        <div id="info">
+          <form method="POST">
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.name(placeholder= 'name',class="put")}}<label for="">Name</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.prename(placeholder= 'prename',class="put") }}<label for="">Prename</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.adresse(placeholder= 'adresse',class="put") }}<label for="">adresse</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.datn(placeholder= 'datn',class="put") }}<label for="">Date nisons</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.Ntph(placeholder= 'nem',class="put") }}<label for="">N°telephone</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.email(placeholder= 'email',class="put") }}<label for="">Email</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.wil(placeholder= 'wilaya', class="putw") }}<label for="">Wilaya</label></div>
+          {% if current_user.bro=="0" %}
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.spi(placeholder= 'spi',class="putw") }}<label for="">Spisyaliti</label></div>
+          <div class="inputbox">{{ form.hidden_tag() }} {{ form.text(placeholder= 'text',class="put") }}<label for="">About me</label></div>
+          {% endif %}
+          {{ form.submit(id="sub") }}
+        <!----></form>
+      </div>
+    </div>
+  </section>
+  <script src="{{ url_for('static', filename='js/edit.js')}}"></script>
 </body>
+
 </html>

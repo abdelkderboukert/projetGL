@@ -1,41 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>hy in your profil</title>
-    <link
-    href="{{ url_for('static', filename='css/style_profil.css')}}"
-    rel="stylesheet"
-  />
-  </head>
-  <body>
-   {{ current_user.name}}
-   {{ inf.prename}}
-   {{ inf.addresse}}
-   {{ inf.Ntph}}
-   {{ inf.datn}}
-   {{ current_user.email}}
-   <a href="{{ url_for('profil_edit', id = current_user.id )}}">
-    <button id="edt">
-      <h2>edit</h2>
-    </button></a
-  >
-  {% if current_user.bro=="0" %}
-  <a href="{{ url_for('home_doctor' )}}"
-  ><button class="option">
-    <h2><ion-icon name="home-outline"></ion-icon>home</h2>
-    <!--home-->
-  </button></a
->
-  {% endif %}
-  {% if current_user.bro=="1" %}
-  <a href="{{ url_for('home' )}}"
-  ><button class="option">
-    <h2><ion-icon name="home-outline"></ion-icon>home</h2>
-    <!--home-->
-  </button></a
->
-{% endif %}
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="{{ url_for('static', filename='css/style_profil.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+  <section style="background-image: url('{{ url_for('static', filename='photos/ph4.jpg')}}');" id="contt">
+    <div class="cont">
+      <p id="titre">Share Your Iinformation With Us</p>
+      {% if current_user.bro=="0" %}
+      <a href="{{ url_for('home_doctor' )}}"><button class="log_out">
+          home
+        </button></a>
+      {% endif %}
+      {% if current_user.bro=="1" %}
+      <a href="{{ url_for('home' )}}"><button class="log_out">
+          home
+        </button></a>
+      {% endif %}
+      <div id="info">
+        <div class="form1">
+          <div class="inputbox"><label for="">Name</label>
+            <div class="put">
+              <h3>{{ current_user.name}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">Prename</label>
+            <div class="put">
+              <h3>{{ inf.prename}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">adresse</label>
+            <div class="put">
+              <h3>{{ inf.adresse}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">Date nisons</label>
+            <div class="put">
+              <h3>{{ inf.datn}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">N°telephone</label>
+            <div class="put">
+              <h3>{{ inf.Ntph}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">Email</label>
+            <div class="put">
+              <h3>{{ current_user.email}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">Wilaya</label>
+            <div class="put">
+              <h3>{{ current_user.wil}}</h3>
+            </div>
+          </div>
+          {% if current_user.bro=="0" %}
+          <div class="inputbox"><label for="">Spisyaliti</label>
+            <div class="put">
+              <h3>{{ current_user.spi}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">About me</label>
+            <div class="put">
+              <h3></h3>
+            </div>
+          </div>
+          {% endif %}
+          <a href="{{ url_for('profil_edit', id = current_user.id )}}">
+            <button id="sub">
+              edit
+            </button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="{{ url_for('static', filename='js/edit.js')}}"></script>
+</body>
+
 </html>

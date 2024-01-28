@@ -11,6 +11,7 @@ from flask_login import UserMixin, login_user, login_manager, logout_user, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import datetime
+from datetime import datetime
 from wtforms.widgets import TextArea
 from flask_apscheduler import APScheduler
 from flask_migrate import Migrate
@@ -37,7 +38,7 @@ scheduler = APScheduler()
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-app.jinja_env.filters['datetime'] = datetime.datetime.strptime
+app.jinja_env.filters['datetime'] = datetime.strptime
 #the module
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -200,20 +201,7 @@ class loginForm(FlaskForm):
     remember = BooleanField('Remember me')
     submit = SubmitField('login')     
     
-class addForm(FlaskForm):
-    title = StringField("title", validators=[DataRequired()])
-    text = StringField("text", widget=TextArea())
-    date_to_do = DateField('date_to_do', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.date.today())
-    hour_to_do = StringField("hour_to_do", validators=[DataRequired()], default=8)
-    min_to_do = StringField("min_to_do", validators=[DataRequired()], default=0)
-    rep = StringField("rep", validators=[DataRequired()])
-    dro = SelectField(u'Choose a programming language', choices=[
-        (0, ''),
-        (1, 'Highest'),
-        (2, 'Medium'),
-        (3, 'Normal'),
-    ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
-    submit = SubmitField('create')
+
 
 class searchForm(FlaskForm):
     spi = SelectField(u'Choose a programming language', choices=[
@@ -228,6 +216,7 @@ class searchForm(FlaskForm):
     ], render_kw={"placeholder": "Choose a priority"}, validators=[DataRequired()])
 
     wil = SelectField(u'Choose a programming language', choices=[
+        (0, ''),
         (1, 'Adrar'),
         (2, 'Chlef'),
         (3, 'Laghouat'),
@@ -419,8 +408,12 @@ def log_out():
 @app.route('/profil', methods = ['GET','POST'])
 @login_required
 def profil():
-    inf = info.query.filter(info.id_user==current_user.id)
-    return render_template('profil.html', inf=inf)
+
+    if(current_user.bro=="1"):
+      inf = info.query.filter(info.id_user==current_user.id).first()
+    else:
+      inf = infod.query.filter(infod.id_user==current_user.id).first()
+    return render_template('profil.html', inf=inf, current_user=current_user)
 
 @app.route('/profil/edit', methods=['GET','POST'])
 @login_required
@@ -476,6 +469,7 @@ def profil_edit():
 
 @app.route('/search', methods = ['POST','GET'])
 @app.route('/search/<w>/<s>', methods = ['POST','GET'])
+@login_required
 def search(w,s):
     form = searchForm()
     infds = infod.query.all()
@@ -495,21 +489,27 @@ def search(w,s):
 
 @app.route('/searchrdv', methods = ['POST','GET'])
 @app.route('/searchrdv/<w>/<s>', methods = ['POST','GET'])
-def searchrdv(w,s):
-   form1 = AddTextForm()
-   datetime.datetime.combine(w,s)
-   rd = rdv.query.filter((rdv.date_to_do==datetime.datetime.combine(w,s)) and (rdv.drid==current_user.id)).first()
-   fr = info.query.filter(info.id_user==rd.ptid).first()
-   pt = User.query.filter(User.id==rd.ptid)
-   rd_time = rd.date_to_do.strftime('%H:%M')
-   if form1.validate_on_submit:
-      old_text = fr.text
-      new_text = form1.new_text.data
-      fr.text= old_text + new_text
-      db.session.commit()
-   return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt)
+@login_required
+def searchrdv(w, s):
+    form1 = AddTextForm()
+    print(s)
+    w = datetime.strptime(w, '%Y-%m-%d').date()
+    s = datetime.strptime(s, '%H:%M:%S').time()
+    rd_time = datetime.combine(w, s).time()
+    rd = rdv.query.filter((rdv.date_to_do == datetime.combine(w, s)) and (rdv.drid == current_user.id)).first()
+    if rd is not None:
+     fr = info.query.filter(info.id_user == rd.ptid).first()
+     pt = User.query.filter(User.id == rd.ptid)
+     if form1.validate_on_submit:
+        old_text = fr.text
+        new_text = form1.new_text.data
+        fr.text = old_text + new_text
+        db.session.commit()
+     return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt)
+    return redirect(url_for('home_doctor'))
 
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
+@login_required
 def profil_doctor(idu):
     form = rdvForm()
     idd = int(idu)

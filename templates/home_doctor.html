@@ -12,18 +12,77 @@
 </head>
 
 <body>
-    <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.date_to_do() }}
-    {{ form.time_to_do() }}
-    {{ form.submit() }}     
-    </form>
-    <a href="{{ url_for('log_out' )}}">
-        <button class="log_out"><h2>logout</h2></button>
-      </a>
+  <header>
+    <div class="he flex-row">
+      <div id="titr">
+        <h2>MeDomeService</h2>
+      </div>
+      <div id="btt1">
       <a href="{{ url_for('profil' )}}">
-        <button class="log_out"><h2>profil</h2></button>
+        <button class="log_out">
+          profil
+        </button>
       </a>
+      </div>
+      <div id="btt2">
+      <a href="{{ url_for('log_out' )}}">
+        <button class="Btn">
+  
+          <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+          
+          <div class="text">Logout</div>
+        </button>
+        
+        
+        
+      </a>
+    </div>
+    </div>
+  </header>
+  <main>
+    <section class="info">
+      <h1>Trouvez un rendez-vous avec</h1>
+      <section class="animation">
+        <div class="first">
+          <div>Médecine générale</div>
+        </div>
+        <div class="second">
+          <div>Cardiologue</div>
+        </div>
+        <div class="third">
+          <div>Radiologue</div>
+        </div>
+  
+  
+  
+  
+  
+      </section>
+    </section>
+    <div id="cont">
+      <div id="sh">
+        <form method="POST">
+          <div class="search">
+            <!-- -->
+  
+            {{ form.hidden_tag() }}
+            <div id="spi">
+              {{ form.date_to_do(id="hhh1") }}<!--class="btnadd",id="bt1"-->
+            </div>
+            <ion-icon name="people-circle-outline" id="doct"></ion-icon>
+            <div id="wil">
+              {{ form.time_to_do(id="hhh2") }}<!--class="btnadd",id="bt2", autofocus=true-->
+            </div>
+            <ion-icon name="navigate-outline" id="posi"></ion-icon>
+            <div id="sb">
+              {{ form.submit(id="sbb") }}
+            </div>
+  
+            <!-- -->
+          </div>
+        </form>
+      </div>
+    </div>
 </body>
 
 </html>
