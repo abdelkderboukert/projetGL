@@ -294,7 +294,7 @@ class rdvForm(FlaskForm):
    submit = SubmitField('create')
    
    def date_time_to_do(self):
-        return datetime.datetime.combine(self.date_to_do.data, self.time_to_do.data)
+        return datetime.combine(self.date_to_do.data, self.time_to_do.data)
 
 class AddTextForm(FlaskForm):
     new_text = StringField('Enter the text you want to add:', validators=[DataRequired()])
@@ -439,22 +439,28 @@ def profil_edit():
          user.id= user.id
          user.name = form.name.data
          user.email = form.email.data
-         if form.spi.data=="":
+
+         if(user.bro=="0"):
+          user.spi = form.spi.data
+         else:
           user.spi = "userr"
+
          user.wil = form.wil.data
          db.session.commit()
          inf.prename = form.prename.data   
          inf.datn = form.datn.data
          inf.Ntph = form.Ntph.data 
          inf.adresse = form.adresse.data
+
          if form.text.data=='':
           inf.text = "somone"
          else:
           inf.text = form.text.data
+
          if user.bro=="1":
-          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
+          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, wil = form.wil.data ,text="someone")
          else:
-          inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, text="someone")
+          inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.adresse.data, datn=form.datn.data, text="someone")
          db.session.commit()
          return redirect(url_for('profil'))
         else:
@@ -466,7 +472,6 @@ def profil_edit():
      form.name.data = current_user.name
      return render_template('edit.html', form=form)
     
-
 @app.route('/search', methods = ['POST','GET'])
 @app.route('/search/<w>/<s>', methods = ['POST','GET'])
 @login_required
@@ -474,15 +479,15 @@ def search(w,s):
     form = searchForm()
     infds = infod.query.all()
 
-    if w =="1":
-      docts = User.query.filter(User.bro=="0" and User.spi==s).all()
+    if w =="100":
+      docts = User.query.filter((User.bro=="0") & (User.spi==str(s))).all()
     else:
-      docts = User.query.filter(User.bro=="0" and User.wil==w and User.spi==s).all()
+      docts = User.query.filter((User.bro=="0") & (User.wil==str(w)) & (User.spi==str(s))).all()
         
 
     form.wil.data= w
     form.spi.data= s
-    if w=="1" and s=="1":
+    if w=="0" and s=="1":
        return render_template('home.html', form=form)
     else:
        return render_template('search.html', form=form, docts=docts,infds=infds, w=w, s=s)
@@ -506,7 +511,7 @@ def searchrdv(w, s):
         fr.text = old_text + new_text
         db.session.commit()
      return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt)
-    return redirect(url_for('home_doctor'))
+    return redirect(url_for('home_doctor '))
 
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 @login_required
@@ -543,9 +548,9 @@ def profil_doctor(idu):
         date_format = '%Y-%m-%d'
 
         try:
-            date = datetime.datetime.strptime(date_str, date_format)
-            start_time = datetime.datetime.combine(date, datetime.datetime.min.time())
-            end_time = datetime.datetime.combine(date, datetime.datetime.max.time())
+            date = datetime.strptime(date_str, date_format)
+            start_time = datetime.combine(date, datetime.min.time())
+            end_time = datetime.combine(date, datetime.max.time())
             current_time = start_time.replace(hour=8, minute=0)
             end_time = end_time.replace(hour=16, minute=0)
             pose_time = start_time.replace(hour=12, minute=0)

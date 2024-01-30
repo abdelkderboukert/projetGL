@@ -1,44 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link
-    href="{{ url_for('static', filename='css/style_profil_doctor.css')}}"
-    rel="stylesheet"
-  />
+    <link href="{{ url_for('static', filename='css/style_profil_doctor.css')}}" rel="stylesheet" />
 </head>
+
 <body>
     <section>
-    {{prename}} {{datn}} {{adresse}} {{Ntph}} {{text}} {{name}} {{spi}} {{wil}} {{email}}
-    <a href="#sec2"><button>creat rdv</button></a>
+        <div class="pro">
+        <div class="textinfo">
+            <div class="text">
+                {{text}}
+                <a href="#sec2"><button id="moves">creat rdv</button></a>
+            </div>
+        </div>
+        <div class="info">
+            <div id="titl"><h2>fgjfsjfh</h2></div>
+        <div class="cont">
+            <div class="info1">
+              <div class="inputbox"><label for="">Name</label>
+                <div class="put">
+                  <h3>{{name}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">Prename</label>
+                <div class="put">
+                  <h3>{{prename}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">adresse</label>
+                <div class="put">
+                  <h3>{{adresse}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">Date nisons</label>
+                <div class="put">
+                  <h3>{{datn}}</h3>
+                </div>
+              </div>
+            </div>
+            <div class="info1">
+              <div class="inputbox"><label for="">spisyaliti</label>
+                <div class="put">
+                  <h3>{{spi}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">N°telephone</label>
+                <div class="put">
+                  <h3>{{Ntph}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">Email</label>
+                <div class="put">
+                  <h3>{{email}}</h3>
+                </div>
+              </div>
+              <div class="inputbox"><label for="">Wilaya</label>
+                <div class="put">
+                  <h3>{{wil}}</h3>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        
     </section>
     <section id="sec2">
 
 
-    <form method="post">
-        <label for="date">Date:</label>
+        <form method="post">
+            <label for="date">Date:</label>
 
-        <input type="date" id="date" name="date" required>
-        <button type="submit">Submit</button>
-    </form>
+            <input type="date" id="date" name="date" required>
+            <button type="submit">Submit</button>
+        </form>
 
-    <ul>
-        {% for time in times %}
+        <ul>
+            {% for time in times %}
             <li>{{ time }}</li>
-        {% endfor %}
-    </ul>
-    <form method="post">
-      {{form.name()}}
-      {{form.prename()}}
-      {{form.date_to_do(type="date")}}
-      {{form.time_to_do()}}
-      {{form.drname()}}
-      {{form.text()}}
-      {{form.ntph()}}
-      {{form.submit()}}
-    </form>  
+            {% endfor %}
+        </ul>
+        <form method="post">
+            {{form.name()}}
+            {{form.prename()}}
+            {{form.date_to_do(type="date")}}
+            {{form.time_to_do()}}
+            {{form.drname()}}
+            {{form.text()}}
+            {{form.ntph()}}
+            {{form.submit()}}
+        </form>
     </section>
 </body>
+
 </html>

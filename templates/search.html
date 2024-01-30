@@ -16,6 +16,7 @@
     {{ w }}
     {% for doct in docts %}
       {{ doct.name }}
+      {{ doct.spi }}
       {% for infd in infds  %}
         {% if infd.id_user==doct.id %}
           {{ infd.prename }}
