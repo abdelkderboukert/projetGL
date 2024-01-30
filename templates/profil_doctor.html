@@ -9,92 +9,123 @@
 </head>
 
 <body>
-    <section>
+    <section style="background-image: url('{{ url_for('static', filename='photos/ph6.jpg')}}');">
         <div class="pro">
-        <div class="textinfo">
-            <div class="text">
+         <div class="textinfo">
+          <div id="hdn">
+            <div id="text1">
+              <div id="text2">
+                <h2>text:</h2>
                 {{text}}
-                <a href="#sec2"><button id="moves">creat rdv</button></a>
-            </div>
-        </div>
-        <div class="info">
-            <div id="titl"><h2>fgjfsjfh</h2></div>
-        <div class="cont">
-            <div class="info1">
-              <div class="inputbox"><label for="">Name</label>
-                <div class="put">
-                  <h3>{{name}}</h3>
-                </div>
               </div>
-              <div class="inputbox"><label for="">Prename</label>
-                <div class="put">
-                  <h3>{{prename}}</h3>
-                </div>
-              </div>
-              <div class="inputbox"><label for="">adresse</label>
-                <div class="put">
-                  <h3>{{adresse}}</h3>
-                </div>
-              </div>
-              <div class="inputbox"><label for="">Date nisons</label>
-                <div class="put">
-                  <h3>{{datn}}</h3>
-                </div>
+                <form id="f1" method="post">
+                  <label for="date">Date:</label>
+      
+                  <input type="date" id="date" name="date" required>
+                  <button class="moves" type="submit">Submit</button>
+                  
+              </form>
+              <button class="moves" id="moves3">creat rdv</button>
+              <button class="btt" id="back-button">back</button>
+              <div id="lis">
+                  {% for time in times %}
+                  <div class="tt">{{ time }}</div>
+                  {% endfor %}
               </div>
             </div>
-            <div class="info1">
-              <div class="inputbox"><label for="">spisyaliti</label>
-                <div class="put">
-                  <h3>{{spi}}</h3>
+            <div id="rdivo">
+              <div class="cont">
+                <form method="POST">
+                <div class="info1">
+                  <div class="inputbox"><label for="">Name</label>
+                      {{form.name(class="put")}}
+                  </div>
+                  <div class="inputbox"><label for="">Prename</label>
+                      {{form.prename(class="put")}}
+                  </div>
+                  <div class="inputbox"><label for="">Date</label>
+                      {{form.date_to_do(type="date",class="put")}}
+                  </div>
+                  <div class="inputbox"><label for="">time</label>
+                      {{form.time_to_do(class="put")}}
+                  </div>
+                </div>
+                <div class="info1">
+                  <div class="inputbox"><label for="">doctor name</label>
+                      {{form.drname(class="put")}}
+                  </div>
+                  <div class="inputbox"><label for="">N°telephone</label>
+                      {{form.ntph(class="put")}}
+                  </div>
+                  <div class="inputbox"><label for="">more</label>
+                      {{form.text(class="put")}}
+                  </div>
+                  <div class="inputboxb">
+                    <button class="btt" id="moves2">about</button>
+                    <button class="btt" id="back-button">back</button>
+                    {{form.submit(class="btt")}}                
+                  </div>
+                </div>
+              </form>
+                </div>
                 </div>
               </div>
-              <div class="inputbox"><label for="">N°telephone</label>
-                <div class="put">
-                  <h3>{{Ntph}}</h3>
-                </div>
-              </div>
-              <div class="inputbox"><label for="">Email</label>
-                <div class="put">
-                  <h3>{{email}}</h3>
-                </div>
-              </div>
-              <div class="inputbox"><label for="">Wilaya</label>
-                <div class="put">
-                  <h3>{{wil}}</h3>
-                </div>
-              </div>
+              <!--<a href="#sec2</a>-->
             </div>
+            <div class="info">
+              <div id="titl"><h2>about me</h2></div>
+              <div class="cont">
+                <div class="info1">
+                  <div class="inputbox"><label for="">Name</label>
+                    <div class="put">
+                      <h3>{{name}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">Prename</label>
+                    <div class="put">
+                      <h3>{{prename}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">adresse</label>
+                    <div class="put">
+                      <h3>{{adresse}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">Date nisons</label>
+                    <div class="put">
+                      <h3>{{datn}}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="info1">
+                  <div class="inputbox"><label for="">spisyaliti</label>
+                    <div class="put">
+                      <h3>{{spi}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">N°telephone</label>
+                    <div class="put">
+                      <h3>{{Ntph}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">Email</label>
+                    <div class="put">
+                      <h3>{{email}}</h3>
+                    </div>
+                  </div>
+                  <div class="inputbox"><label for="">Wilaya</label>
+                    <div class="put">
+                      <h3>{{wil}}</h3>
+                    </div>
+                  </div>
+            </div>
+          </div>
         </div>
-        </div>
+
         </div>
         
     </section>
-    <section id="sec2">
-
-
-        <form method="post">
-            <label for="date">Date:</label>
-
-            <input type="date" id="date" name="date" required>
-            <button type="submit">Submit</button>
-        </form>
-
-        <ul>
-            {% for time in times %}
-            <li>{{ time }}</li>
-            {% endfor %}
-        </ul>
-        <form method="post">
-            {{form.name()}}
-            {{form.prename()}}
-            {{form.date_to_do(type="date")}}
-            {{form.time_to_do()}}
-            {{form.drname()}}
-            {{form.text()}}
-            {{form.ntph()}}
-            {{form.submit()}}
-        </form>
-    </section>
+    <script src="{{ url_for('static', filename='js/profil_doctor.js')}}"></script>
 </body>
 
 </html>
