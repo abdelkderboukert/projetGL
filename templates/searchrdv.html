@@ -10,6 +10,81 @@
   />
 </head>
 <body>
+  <section style="background-image: url('{{ url_for('static', filename='photos/ph6.jpg')}}');">
+    <div class="pro">
+     <div class="textinfo">
+      <div id="hdn">
+        <div id="text1">
+          <div id="text2">
+            <h2>text:</h2>
+            {{rd.text}}
+          </div>
+            <form id="f1" method="post">
+              {{ form1.new_text(class="pot") }}
+              {{ form1.submit()}}
+          </form>
+          <a href="{{ url_for('home_doctor' )}}"
+          ><button class="option">
+            <h2>home</h2>
+            <!--home-->
+          </button></a
+        >
+        </div>
+
+      </div>
+     </div>
+     <div class="info">
+      <div id="titl"><h2>the rdv information</h2></div>
+      <div class="cont">
+        <div class="info1">
+          <div class="inputbox"><label for="">Name doctor</label>
+            <div class="put">
+              <h3>{{rd.drname}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">date</label>
+            <div class="put">
+              <h3>{{rd.date_to_do.date()}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">time</label>
+            <div class="put">
+              <h3>{{rd_time}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">about</label>
+            <div class="put">
+              <h3>{{rd.text}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="info1">
+          <div class="inputbox"><label for="">name</label>
+            <div class="put">
+              <h3>{{rd.name}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">prename</label>
+            <div class="put">
+              <h3>{{rd.prename}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">Email</label>
+            <div class="put">
+              <h3>{{pt.email}}</h3>
+            </div>
+          </div>
+          <div class="inputbox"><label for="">N°telephone</label>
+            <div class="put">
+              <h3>{{rd.ntph}}</h3>
+            </div>
+          </div>
+    </div>
+    </div>
+
+    </div>
+    
+</section>
     {{rd.id}}
     {{rd.date_to_do.date()}}
     {{rd_time}}
@@ -24,6 +99,7 @@
 
     <form method="POST">
         {{ form1.new_text() }}
+        {{ form1.submit()}}
     </form>
     <a href="{{ url_for('home_doctor' )}}"
     ><button class="option">

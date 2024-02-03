@@ -73,7 +73,7 @@ class info(db.Model):
     datn = db.Column(db.String(30), nullable=False, default='userr')
     adresse = db.Column(db.String(30), nullable=False, default='userr')
     Ntph = db.Column(db.String(12), nullable=False, default='userr')
-    text = db.Column(db.Text)
+    text = db.Column(db.Text, default='')
 
     def __repr__(self):
         return '<name %r>' % self.name
@@ -458,7 +458,7 @@ def profil_edit():
           inf.text = form.text.data
 
          if user.bro=="1":
-          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data, wil = form.wil.data ,text="someone")
+          inf = info(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.prename.data, datn=form.datn.data,text="someone")
          else:
           inf = infod(id_user=user.id, prename=form.prename.data, Ntph=form.Ntph.data, adresse=form.adresse.data, datn=form.datn.data, text="someone")
          db.session.commit()
@@ -501,17 +501,25 @@ def searchrdv(w, s):
     w = datetime.strptime(w, '%Y-%m-%d').date()
     s = datetime.strptime(s, '%H:%M:%S').time()
     rd_time = datetime.combine(w, s).time()
-    rd = rdv.query.filter((rdv.date_to_do == datetime.combine(w, s)) and (rdv.drid == current_user.id)).first()
+    rd = rdv.query.filter((rdv.date_to_do == datetime.combine(w, s)) & (rdv.drid == int(current_user.id))).first()
     if rd is not None:
      fr = info.query.filter(info.id_user == rd.ptid).first()
-     pt = User.query.filter(User.id == rd.ptid)
+     pt = User.query.filter(User.id == rd.ptid).first()
      if form1.validate_on_submit:
         old_text = fr.text
+        print(old_text)
+        print(fr.text)
         new_text = form1.new_text.data
-        fr.text = old_text + new_text
-        db.session.commit()
-     return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt)
-    return redirect(url_for('home_doctor '))
+        if old_text is not None:
+         fr.text = fr.text + new_text
+         db.session.commit()
+         form1.new_text=''
+        else:
+           fr.text = new_text
+           db.session.commit()
+           form1.new_text=''
+     return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt, form1=form1)
+    return redirect(url_for('home_doctor'))
 
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
 @login_required
@@ -572,7 +580,7 @@ def profil_doctor(idu):
 
 @app.route('/pay',methods = ['POST','GET'])
 def pay():
-    return render_template('pay.html')
+    return render_template('test.html')
 
 with app.app_context():
         db.create_all()
