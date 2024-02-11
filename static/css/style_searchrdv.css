@@ -40,7 +40,7 @@ body{
   #titl{
     height: 80px;
     width: 100%;
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
     justify-content: center;
     align-items: center;
     color: #fff;
@@ -173,7 +173,7 @@ body{
     margin: 5px;
     border: none;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
     color: white;
     font-size: 150%;
   }
@@ -188,7 +188,7 @@ body{
     margin: 50px 5px 0 5px;
     border: none;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
     color: white;
     font-size: 150%;
   }
@@ -203,27 +203,29 @@ body{
     margin: 10px;
     font-size: 150%;
     color: #fff;
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
     overflow-y: scroll;
   }
   #text2::-webkit-scrollbar {
     display: none;
   }
-  #f1{
-    height: 55%;
+  #f2{
+    height: 45%;
     width: 100%;
   }
   .pot{
     height: calc(100%-20px);
-    width: calc(100%-20px);
+    width: 80%;
     background-color: transparent;
     backdrop-filter: blur(50px);
     box-shadow:0 10px 10px rgba(0, 0, 0, 0.7);
     border-radius: 30px;
     margin: 10px;
     font-size: 150%;
+    padding: 10px;
     color: #fff;
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
+    border: none;
     overflow-y: scroll;
   }
   .pot::-webkit-scrollbar {
@@ -272,9 +274,17 @@ body{
     height: 40px;
     min-width: 120px;
     border-radius: 20px;
-    font-family: "Ink Free", Times, serif;
+    /*font-family: "Ink Free", Times, serif;*/
     color: #fff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
     text-align: center;
     line-height: 40px;
+  }
+
+  .potb{
+    height: calc(100%-20px);
+    width: 15%;
+    border-radius: 20px;
+    border: none;
+    margin: 0 10px 0 0;
   }

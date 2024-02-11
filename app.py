@@ -202,7 +202,6 @@ class loginForm(FlaskForm):
     submit = SubmitField('login')     
     
 
-
 class searchForm(FlaskForm):
     spi = SelectField(u'Choose a programming language', choices=[
         (1, ''),
@@ -297,7 +296,7 @@ class rdvForm(FlaskForm):
         return datetime.combine(self.date_to_do.data, self.time_to_do.data)
 
 class AddTextForm(FlaskForm):
-    new_text = StringField('Enter the text you want to add:', validators=[DataRequired()])
+    new_text = StringField("new_text", widget=TextArea())
     submit = SubmitField('Add Text')
 
 @app.route('/home', methods=['POST', 'GET'])
@@ -497,7 +496,6 @@ def search(w,s):
 @login_required
 def searchrdv(w, s):
     form1 = AddTextForm()
-    print(s)
     w = datetime.strptime(w, '%Y-%m-%d').date()
     s = datetime.strptime(s, '%H:%M:%S').time()
     rd_time = datetime.combine(w, s).time()
@@ -505,20 +503,21 @@ def searchrdv(w, s):
     if rd is not None:
      fr = info.query.filter(info.id_user == rd.ptid).first()
      pt = User.query.filter(User.id == rd.ptid).first()
-     if form1.validate_on_submit:
+     if form1.new_text.data is not None:#form1.validate_on_submit
         old_text = fr.text
-        print(old_text)
         print(fr.text)
         new_text = form1.new_text.data
+        print(new_text)
         if old_text is not None:
-         fr.text = fr.text + new_text
+         fr.text = fr.text + '\n' + str(datetime.now())  + '\n' + new_text
          db.session.commit()
          form1.new_text=''
         else:
            fr.text = new_text
            db.session.commit()
-           form1.new_text=''
-     return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt, form1=form1)
+           form1.new_text=''      
+     else:
+       return render_template('searchrdv.html', rd=rd, fr=fr, rd_time=rd_time, pt=pt, form1=form1)
     return redirect(url_for('home_doctor'))
 
 @app.route('/profil_doctor/<idu>', methods = ['POST','GET'])
@@ -580,6 +579,9 @@ def profil_doctor(idu):
 
 @app.route('/pay',methods = ['POST','GET'])
 def pay():
+    import qrcode
+    img =qrcode.make("https://witanime.pics/")
+    img.save("rggegead.png")
     return render_template('test.html')
 
 with app.app_context():
